@@ -1,9 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
-import { today, calcHabitStreak, calcAntiHabitStreak, formatDuration, buildCheckinMap, buildAntiCheckinSet, URGENCY_CONFIG } from '@/lib/utils'
-import { format, parseISO, isPast, isToday } from 'date-fns'
+import { today, calcHabitStreak, calcAntiHabitStreak, formatDuration, buildCheckinMap, buildAntiCheckinSet } from '@/lib/utils'
+import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { DashboardHabitCard } from '@/components/habits/dashboard-habit-card'
 import { DashboardAntiHabitCard } from '@/components/anti-habits/dashboard-anti-habit-card'
+import { DashboardTodoItem } from '@/components/todos/dashboard-todo-item'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
@@ -138,32 +139,9 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-2">
-            {todos.map((todo) => {
-              const urgency = URGENCY_CONFIG[todo.urgency as keyof typeof URGENCY_CONFIG]
-              const isOverdue = todo.deadline && isPast(parseISO(todo.deadline)) && !isToday(parseISO(todo.deadline))
-              return (
-                <div key={todo.id} className="flex items-start gap-3 rounded-xl border border-border bg-card p-3">
-                  <span className={`mt-0.5 shrink-0 rounded border px-1.5 py-0.5 text-xs font-semibold ${urgency.color}`}>
-                    {urgency.label}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{todo.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      {todo.todo_categories && (
-                        <span className="text-xs text-muted-foreground" style={{ color: todo.todo_categories.color }}>
-                          {todo.todo_categories.name}
-                        </span>
-                      )}
-                      {todo.deadline && (
-                        <span className={`text-xs ${isOverdue ? 'text-red-400' : 'text-muted-foreground'}`}>
-                          {isOverdue ? '⚠️ ' : ''}{format(parseISO(todo.deadline), 'd MMM', { locale: es })}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+            {todos.map((todo) => (
+              <DashboardTodoItem key={todo.id} todo={todo} />
+            ))}
           </div>
         </section>
       )}

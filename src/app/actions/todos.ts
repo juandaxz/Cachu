@@ -93,6 +93,21 @@ export async function ensureDefaultCategories() {
   )
 }
 
+export async function completeTodoFromDashboard(id: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  const { error } = await supabase.from('todos')
+    .update({ status: 'done' })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+  revalidatePath('/todos')
+  return { success: true }
+}
+
 export async function updateTodo(id: string, formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

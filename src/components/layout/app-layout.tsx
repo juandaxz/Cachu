@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/', icon: Home, label: 'Hoy' },
+  { href: '/', icon: Home, label: 'Home' },
   { href: '/habits', icon: Target, label: 'Hábitos' },
   { href: '/anti-habits', icon: ShieldOff, label: 'Dejar' },
   { href: '/todos', icon: CheckSquare, label: 'Tareas' },

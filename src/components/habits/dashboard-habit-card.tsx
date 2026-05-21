@@ -41,7 +41,9 @@ export function DashboardHabitCard({ habit, checkedToday, todayValue, streak }: 
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">{habit.name}</p>
+        <p className={`text-sm font-medium transition-all ${checkedToday ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+          {habit.name}
+        </p>
         {streak > 0 && (
           <p className="text-xs text-orange-400 flex items-center gap-1">
             <Flame className="h-3 w-3" /> {streak} días de racha
