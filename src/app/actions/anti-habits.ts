@@ -64,17 +64,6 @@ export async function uncheckinAntiHabit(antiHabitId: string) {
   return { success: true }
 }
 
-export async function deleteAntiHabit(id: string) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'No autenticado' }
-
-  const { error } = await supabase.from('anti_habits').delete().eq('id', id).eq('user_id', user.id)
-  if (error) return { error: error.message }
-  revalidatePath('/', 'layout')
-  return { success: true }
-}
-
 export async function saveTemptationNote(antiHabitId: string, note: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -88,3 +77,4 @@ export async function saveTemptationNote(antiHabitId: string, note: string) {
   revalidatePath('/', 'layout')
   return { success: true }
 }
+
