@@ -31,7 +31,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar (desktop) */}
       <aside className="hidden md:flex flex-col w-56 border-r border-border p-4 gap-1 shrink-0">
         <div className="flex items-center gap-2 px-2 py-3 mb-4">
-          <span className="text-2xl">🐠</span>
+          <span className="text-2xl">🦆</span>
           <span className="font-bold text-lg text-foreground">Cachuflin</span>
         </div>
 
@@ -70,7 +70,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🐠</span>
+            <span className="text-xl">🦆</span>
             <span className="font-bold text-foreground">Cachuflin</span>
           </div>
           <button

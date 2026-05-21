@@ -155,7 +155,7 @@ export default async function DashboardPage() {
       {/* Empty state */}
       {habits.length === 0 && antiHabits.length === 0 && todos.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">🐠</p>
+          <p className="text-4xl">🦆</p>
           <p className="text-muted-foreground">Todo vacío. ¡Empieza agregando hábitos o tareas!</p>
         </div>
       )}
