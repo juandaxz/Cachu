@@ -4,7 +4,9 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const nextParam = searchParams.get('next') ?? '/'
+  // Ensure next is a relative path to prevent open redirect
+  const next = nextParam.startsWith('/') && !nextParam.startsWith('//') ? nextParam : '/'
 
   if (code) {
     const supabase = await createClient()
