@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { format, subDays, eachDayOfInterval, startOfWeek, parseISO, differenceInDays } from 'date-fns'
+import { format, subDays, addDays, eachDayOfInterval, startOfWeek, parseISO, differenceInDays } from 'date-fns'
 import type { HabitCheckin, AntiHabitCheckin } from './types'
 
 export function cn(...inputs: ClassValue[]) {
@@ -84,20 +84,20 @@ export interface HeatmapDay {
 }
 
 export function buildYearGrid(valueMap: Record<string, number>): HeatmapDay[][] {
-  const end = new Date()
-  const start = subDays(end, 364)
-  // Align start to Sunday
-  const gridStart = startOfWeek(start, { weekStartsOn: 0 })
-  const days = eachDayOfInterval({ start: gridStart, end })
-  const todayStr = format(end, 'yyyy-MM-dd')
-  const endStr = todayStr
+  const now = new Date()
+  const todayStr = format(now, 'yyyy-MM-dd')
+  // Start from the Sunday of the current week, go 52 weeks forward
+  const gridStart = startOfWeek(now, { weekStartsOn: 0 })
+  const gridEnd = addDays(gridStart, 7 * 52 - 1)
+
+  const days = eachDayOfInterval({ start: gridStart, end: gridEnd })
 
   const weeks: HeatmapDay[][] = []
   let week: HeatmapDay[] = []
 
   days.forEach((day) => {
     const dateStr = format(day, 'yyyy-MM-dd')
-    const isFuture = dateStr > endStr
+    const isFuture = dateStr > todayStr
     week.push({
       date: dateStr,
       value: isFuture ? 0 : (valueMap[dateStr] ?? 0),

@@ -32,14 +32,20 @@ export default async function DashboardPage() {
       .from('todos')
       .select('*, todo_categories(name, color)')
       .eq('user_id', user.id)
-      .neq('status', 'done')
-      .order('urgency', { ascending: false })
-      .limit(5),
+      .order('created_at', { ascending: false }),
   ])
 
   const habits = habitsRes.data ?? []
   const antiHabits = antiHabitsRes.data ?? []
-  const todos = todosRes.data ?? []
+
+  // Sort: pending/in_progress by urgency priority first, then done at the bottom
+  const urgencyOrder: Record<string, number> = { risk: 0, high: 1, medium: 2, low: 3 }
+  const statusOrder: Record<string, number> = { pending: 0, in_progress: 1, done: 2 }
+  const todos = (todosRes.data ?? []).sort((a, b) => {
+    const sd = (statusOrder[a.status] ?? 0) - (statusOrder[b.status] ?? 0)
+    if (sd !== 0) return sd
+    return (urgencyOrder[a.urgency] ?? 3) - (urgencyOrder[b.urgency] ?? 3)
+  })
 
   const dayLabel = format(new Date(), "EEEE, d 'de' MMMM", { locale: es })
   const dayLabelCapitalized = dayLabel.charAt(0).toUpperCase() + dayLabel.slice(1)
@@ -47,7 +53,7 @@ export default async function DashboardPage() {
   // Stats
   const totalHabits = habits.length
   const checkedToday = habits.filter((h) => h.habit_checkins?.some((c: { date: string }) => c.date === todayStr)).length
-  const pendingTodos = todos.filter((t) => t.status !== 'done').length
+  const pendingTodos = todos.filter((t) => t.status === 'pending' || t.status === 'in_progress').length
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -129,11 +135,11 @@ export default async function DashboardPage() {
         </section>
       )}
 
-      {/* Urgent todos */}
+      {/* Todos */}
       {todos.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Tareas pendientes</h2>
+            <h2 className="font-semibold text-foreground">Tareas</h2>
             <Link href="/todos" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todas <ArrowRight className="h-3 w-3" />
             </Link>
