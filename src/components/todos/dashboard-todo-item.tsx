@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { completeTodoFromDashboard } from '@/app/actions/todos'
 import { format, parseISO, isPast, isToday } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -16,9 +16,19 @@ interface DashboardTodo {
   todo_categories?: { name: string; color: string } | null
 }
 
+function todayKey(id: string) {
+  const d = new Date().toISOString().slice(0, 10)
+  return `dashboard-done-${id}-${d}`
+}
+
 export function DashboardTodoItem({ todo }: { todo: DashboardTodo }) {
   const [done, setDone] = useState(todo.status === 'done')
   const [isPending, startTransition] = useTransition()
+
+  // Restore done state from localStorage (persists until end of day)
+  useEffect(() => {
+    if (localStorage.getItem(todayKey(todo.id)) === '1') setDone(true)
+  }, [todo.id])
 
   const urgency = URGENCY_CONFIG[todo.urgency as Urgency]
   const isOverdue = todo.deadline && isPast(parseISO(todo.deadline)) && !isToday(parseISO(todo.deadline))
@@ -26,6 +36,7 @@ export function DashboardTodoItem({ todo }: { todo: DashboardTodo }) {
   function handleCheck() {
     if (done) return
     setDone(true)
+    localStorage.setItem(todayKey(todo.id), '1')
     startTransition(() => completeTodoFromDashboard(todo.id))
   }
 

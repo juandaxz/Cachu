@@ -12,13 +12,16 @@ interface Props {
   streak: number
 }
 
-export function DashboardHabitCard({ habit, checkedToday, todayValue, streak }: Props) {
+export function DashboardHabitCard({ habit, checkedToday: initialChecked, todayValue, streak }: Props) {
   const [isPending, startTransition] = useTransition()
+  const [checked, setChecked] = useState(initialChecked)
   const [count, setCount] = useState(todayValue || 1)
 
   function handleCheck() {
+    const next = !checked
+    setChecked(next)
     startTransition(async () => {
-      if (checkedToday) {
+      if (!next) {
         await uncheckinHabit(habit.id)
       } else {
         await checkinHabit(habit.id, habit.type === 'count' ? count : 1)
@@ -32,16 +35,16 @@ export function DashboardHabitCard({ habit, checkedToday, todayValue, streak }: 
         onClick={handleCheck}
         disabled={isPending}
         className={`h-8 w-8 shrink-0 rounded-lg border-2 flex items-center justify-center text-base transition-all ${
-          checkedToday
+          checked
             ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400'
             : 'border-border bg-transparent hover:border-primary/50'
         }`}
       >
-        {checkedToday ? '✓' : habit.emoji}
+        {checked ? '✓' : habit.emoji}
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium transition-all ${checkedToday ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+        <p className={`text-sm font-medium transition-all ${checked ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
           {habit.name}
         </p>
         {streak > 0 && (
@@ -51,7 +54,7 @@ export function DashboardHabitCard({ habit, checkedToday, todayValue, streak }: 
         )}
       </div>
 
-      {habit.type === 'count' && !checkedToday && (
+      {habit.type === 'count' && !checked && (
         <div className="flex items-center gap-1">
           <button
             onClick={() => setCount(Math.max(1, count - 1))}
@@ -65,8 +68,8 @@ export function DashboardHabitCard({ habit, checkedToday, todayValue, streak }: 
         </div>
       )}
 
-      {habit.type === 'count' && checkedToday && (
-        <span className="text-sm text-muted-foreground">{todayValue}x</span>
+      {habit.type === 'count' && checked && (
+        <span className="text-sm text-muted-foreground">{todayValue || count}x</span>
       )}
     </div>
   )
