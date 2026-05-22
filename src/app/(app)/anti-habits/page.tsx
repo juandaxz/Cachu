@@ -20,16 +20,15 @@ export default async function AntiHabitsPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Hábitos a dejar</h1>
-          <p className="text-sm text-muted-foreground">Tu racha de días limpio</p>
+          <h1 className="text-2xl font-bold text-foreground">Habits to quit</h1>
+          <p className="text-sm text-muted-foreground">Your clean streak</p>
         </div>
         <AntiHabitForm />
       </div>
 
       {(!antiHabits || antiHabits.length === 0) ? (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">🛡️</p>
-          <p className="text-muted-foreground">Sin hábitos que dejar aún. ¡Agrega uno!</p>
+          <p className="text-muted-foreground">No habits to quit yet. Add one.</p>
         </div>
       ) : (
         <div className="space-y-4">

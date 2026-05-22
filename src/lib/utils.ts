@@ -83,12 +83,11 @@ export interface HeatmapDay {
   isFuture: boolean
 }
 
-export function buildYearGrid(valueMap: Record<string, number>): HeatmapDay[][] {
+export function buildYearGrid(valueMap: Record<string, number>, weekCount = 52): HeatmapDay[][] {
   const now = new Date()
   const todayStr = format(now, 'yyyy-MM-dd')
-  // Start from the Sunday of the current week, go 52 weeks forward
   const gridStart = startOfWeek(now, { weekStartsOn: 0 })
-  const gridEnd = addDays(gridStart, 7 * 52 - 1)
+  const gridEnd = addDays(gridStart, 7 * weekCount - 1)
 
   const days = eachDayOfInterval({ start: gridStart, end: gridEnd })
 
@@ -113,6 +112,33 @@ export function buildYearGrid(valueMap: Record<string, number>): HeatmapDay[][] 
   return weeks
 }
 
+// Build history grid (past weekCount weeks ending at the current week)
+export function buildHistoryGrid(valueMap: Record<string, number>, weekCount = 17): HeatmapDay[][] {
+  const now = new Date()
+  const todayStr = format(now, 'yyyy-MM-dd')
+  const currentWeekStart = startOfWeek(now, { weekStartsOn: 0 })
+  const gridStart = subDays(currentWeekStart, 7 * (weekCount - 1))
+  const gridEnd = addDays(currentWeekStart, 6)
+
+  const days = eachDayOfInterval({ start: gridStart, end: gridEnd })
+  const weeks: HeatmapDay[][] = []
+  let week: HeatmapDay[] = []
+
+  days.forEach((day) => {
+    const dateStr = format(day, 'yyyy-MM-dd')
+    const isFuture = dateStr > todayStr
+    week.push({
+      date: dateStr,
+      value: isFuture ? 0 : (valueMap[dateStr] ?? 0),
+      isToday: dateStr === todayStr,
+      isFuture,
+    })
+    if (week.length === 7) { weeks.push(week); week = [] }
+  })
+  if (week.length > 0) weeks.push(week)
+  return weeks
+}
+
 // Get urgency label and color
 export const URGENCY_CONFIG = {
   low: { label: 'Low', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
@@ -128,20 +154,20 @@ export const STATUS_CONFIG = {
 } as const
 
 export const MOTIVATIONAL_MESSAGES = [
-  '¡Tú puedes! No caigas ahora.',
-  'Eres más fuerte que este impulso.',
-  'Este momento va a pasar. Respira profundo.',
-  'Recuerda por qué empezaste.',
-  'Sal a caminar, toma agua, cuenta hasta 10.',
-  'El arrepentimiento dura más que el placer.',
-  'Cada día que resistes se hace más fácil.',
-  'Llama a alguien en quien confíes.',
-  'No le falles a quien podrías ser.',
+  'You can do this. Don\'t give in now.',
+  'You are stronger than this urge.',
+  'This moment will pass. Breathe deeply.',
+  'Remember why you started.',
+  'Go for a walk, drink water, count to 10.',
+  'Regret lasts longer than the pleasure.',
+  'Every day you resist gets easier.',
+  'Call someone you trust.',
+  'Don\'t let down who you could become.',
 ]
 
 export const DEFAULT_CATEGORIES = [
-  { name: 'Universidad', color: '#6366f1' },
+  { name: 'University', color: '#6366f1' },
   { name: 'Personal', color: '#ec4899' },
-  { name: 'Trabajo', color: '#f59e0b' },
-  { name: 'Salud', color: '#10b981' },
+  { name: 'Work', color: '#f59e0b' },
+  { name: 'Health', color: '#10b981' },
 ]

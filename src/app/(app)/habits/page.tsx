@@ -21,16 +21,15 @@ export default async function HabitsPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Hábitos</h1>
-          <p className="text-sm text-muted-foreground">Hábitos positivos que quieres construir</p>
+          <h1 className="text-2xl font-bold text-foreground">Habits</h1>
+          <p className="text-sm text-muted-foreground">Positive habits you want to build</p>
         </div>
         <HabitForm />
       </div>
 
       {(!habits || habits.length === 0) ? (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">🎯</p>
-          <p className="text-muted-foreground">Sin hábitos aún. ¡Agrega el primero!</p>
+          <p className="text-muted-foreground">No habits yet. Add your first one.</p>
         </div>
       ) : (
         <div className="space-y-3">

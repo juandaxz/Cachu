@@ -37,7 +37,7 @@ export function TodoFilters({ categories, currentView }: Props) {
           className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${currentView !== 'kanban' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
         >
           <LayoutList className="h-4 w-4" />
-          Lista
+          List
         </button>
         <button
           onClick={() => update('view', 'kanban')}
@@ -47,20 +47,19 @@ export function TodoFilters({ categories, currentView }: Props) {
           Kanban
         </button>
 
-        {/* Status filter (list only) */}
         {currentView !== 'kanban' && (
           <button
             onClick={() => update('status', status === 'done' ? null : 'done')}
             className={`ml-auto text-xs rounded-lg px-3 py-1.5 border transition-colors ${status === 'done' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
           >
-            Ver completadas
+            Show completed
           </button>
         )}
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted-foreground self-center">Urgencia:</span>
+        <span className="text-xs text-muted-foreground self-center">Urgency:</span>
         {(Object.entries(URGENCY_CONFIG) as [string, typeof URGENCY_CONFIG[keyof typeof URGENCY_CONFIG]][]).map(([key, cfg]) => (
           <button
             key={key}
@@ -73,7 +72,7 @@ export function TodoFilters({ categories, currentView }: Props) {
 
         {categories.length > 0 && (
           <>
-            <span className="text-xs text-muted-foreground self-center ml-2">Cat:</span>
+            <span className="text-xs text-muted-foreground self-center ml-2">Category:</span>
             {categories.map((cat) => (
               <button
                 key={cat.id}

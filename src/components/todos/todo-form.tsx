@@ -46,48 +46,48 @@ export function TodoForm({ categories }: Props) {
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          Nueva tarea
+          New task
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nueva tarea</DialogTitle>
+          <DialogTitle>New task</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
-            <Input id="title" name="title" placeholder="¿Qué tienes que hacer?" required />
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" name="title" placeholder="What do you need to do?" required />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción (opcional)</Label>
-            <Textarea id="description" name="description" placeholder="Detalles..." rows={2} />
+            <Label htmlFor="description">Description (optional)</Label>
+            <Textarea id="description" name="description" placeholder="Details..." rows={2} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Urgencia</Label>
+              <Label>Urgency</Label>
               <Select value={urgency} onValueChange={setUrgency}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">🔵 Low</SelectItem>
-                  <SelectItem value="medium">🟡 Medium</SelectItem>
-                  <SelectItem value="high">🟠 High</SelectItem>
-                  <SelectItem value="risk">🔴 RISK</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="risk">RISK</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Categoría</Label>
+              <Label>Category</Label>
               <Select value={categoryId} onValueChange={setCategoryId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Sin categoría" />
+                  <SelectValue placeholder="No category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">Sin categoría</SelectItem>
+                  <SelectItem value="none">No category</SelectItem>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                   ))}
@@ -97,7 +97,7 @@ export function TodoForm({ categories }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deadline">Deadline (opcional)</Label>
+            <Label htmlFor="deadline">Deadline (optional)</Label>
             <Input id="deadline" name="deadline" type="datetime-local" />
           </div>
 
@@ -105,10 +105,10 @@ export function TodoForm({ categories }: Props) {
 
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Guardando...' : 'Crear tarea'}
+              {isPending ? 'Saving...' : 'Create task'}
             </Button>
           </div>
         </form>

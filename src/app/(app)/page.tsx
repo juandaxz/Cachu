@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { today, calcHabitStreak, calcAntiHabitStreak, formatDuration, buildCheckinMap, buildAntiCheckinSet } from '@/lib/utils'
+import { today, calcAntiHabitStreak, formatDuration, buildAntiCheckinSet } from '@/lib/utils'
 import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { DashboardHabitCard } from '@/components/habits/dashboard-habit-card'
+import { HabitsDashboardSection } from '@/components/habits/habits-dashboard-section'
 import { DashboardAntiHabitCard } from '@/components/anti-habits/dashboard-anti-habit-card'
 import { DashboardTodoItem } from '@/components/todos/dashboard-todo-item'
 import Link from 'next/link'
@@ -15,7 +14,6 @@ export default async function DashboardPage() {
 
   const todayStr = today()
 
-  // Fetch all data in parallel
   const [habitsRes, antiHabitsRes, todosRes] = await Promise.all([
     supabase
       .from('habits')
@@ -38,7 +36,6 @@ export default async function DashboardPage() {
   const habits = habitsRes.data ?? []
   const antiHabits = antiHabitsRes.data ?? []
 
-  // Sort: pending/in_progress by urgency priority first, then done at the bottom
   const urgencyOrder: Record<string, number> = { risk: 0, high: 1, medium: 2, low: 3 }
   const statusOrder: Record<string, number> = { pending: 0, in_progress: 1, done: 2 }
   const todos = (todosRes.data ?? []).sort((a, b) => {
@@ -47,10 +44,8 @@ export default async function DashboardPage() {
     return (urgencyOrder[a.urgency] ?? 3) - (urgencyOrder[b.urgency] ?? 3)
   })
 
-  const dayLabel = format(new Date(), "EEEE, d 'de' MMMM", { locale: es })
-  const dayLabelCapitalized = dayLabel.charAt(0).toUpperCase() + dayLabel.slice(1)
+  const dayLabel = format(new Date(), 'EEEE, MMMM d')
 
-  // Stats
   const totalHabits = habits.length
   const checkedToday = habits.filter((h) => h.habit_checkins?.some((c: { date: string }) => c.date === todayStr)).length
   const pendingTodos = todos.filter((t) => t.status === 'pending' || t.status === 'in_progress').length
@@ -59,61 +54,39 @@ export default async function DashboardPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div>
-        <p className="text-muted-foreground text-sm">{dayLabelCapitalized}</p>
-        <h1 className="text-2xl font-bold text-foreground">Buenos días 👋</h1>
+        <p className="text-muted-foreground text-sm">{dayLabel}</p>
+        <h1 className="text-2xl font-bold text-foreground">Good morning</h1>
       </div>
 
       {/* Quick stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-primary">{checkedToday}/{totalHabits}</p>
-          <p className="text-xs text-muted-foreground mt-1">Hábitos hoy</p>
+          <p className="text-xs text-muted-foreground mt-1">Habits today</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-emerald-400">{antiHabits.length}</p>
-          <p className="text-xs text-muted-foreground mt-1">En control</p>
+          <p className="text-xs text-muted-foreground mt-1">In control</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-yellow-400">{pendingTodos}</p>
-          <p className="text-xs text-muted-foreground mt-1">Tareas pendientes</p>
+          <p className="text-xs text-muted-foreground mt-1">Pending tasks</p>
         </div>
       </div>
 
       {/* Habits check-in */}
       {habits.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Hábitos de hoy</h2>
-            <Link href="/habits" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              Ver todos <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-          <div className="space-y-2">
-            {habits.map((habit) => {
-              const checkinMap = buildCheckinMap(habit.habit_checkins ?? [])
-              const checkedToday = todayStr in checkinMap
-              const streak = calcHabitStreak(habit.habit_checkins ?? [])
-              return (
-                <DashboardHabitCard
-                  key={habit.id}
-                  habit={habit}
-                  checkedToday={checkedToday}
-                  todayValue={checkinMap[todayStr] ?? 0}
-                  streak={streak}
-                />
-              )
-            })}
-          </div>
-        </section>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        <HabitsDashboardSection habits={habits as any} />
       )}
 
       {/* Anti-habits check-in */}
       {antiHabits.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Rachas activas</h2>
+            <h2 className="font-semibold text-foreground">Active streaks</h2>
             <Link href="/anti-habits" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              Ver todos <ArrowRight className="h-3 w-3" />
+              See all <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="space-y-2">
@@ -139,9 +112,9 @@ export default async function DashboardPage() {
       {todos.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Tareas</h2>
+            <h2 className="font-semibold text-foreground">Tasks</h2>
             <Link href="/todos" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              Ver todas <ArrowRight className="h-3 w-3" />
+              See all <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="space-y-2">
@@ -155,8 +128,7 @@ export default async function DashboardPage() {
       {/* Empty state */}
       {habits.length === 0 && antiHabits.length === 0 && todos.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">🦆</p>
-          <p className="text-muted-foreground">Todo vacío. ¡Empieza agregando hábitos o tareas!</p>
+          <p className="text-muted-foreground">Nothing here. Start by adding habits or tasks.</p>
         </div>
       )}
     </div>

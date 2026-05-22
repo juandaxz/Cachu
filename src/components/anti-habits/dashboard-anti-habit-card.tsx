@@ -6,6 +6,11 @@ import { TemptationModal } from './temptation-modal'
 import { Flame, ShieldCheck } from 'lucide-react'
 import type { AntiHabit } from '@/lib/types'
 
+const COLORS = ['#7c3aed','#0891b2','#059669','#d97706','#2563eb','#db2777','#ea580c','#0f766e']
+function getColor(id: string): string {
+  return COLORS[parseInt(id.slice(-1), 16) % COLORS.length]
+}
+
 interface Props {
   antiHabit: AntiHabit
   checkedToday: boolean
@@ -15,37 +20,37 @@ interface Props {
 
 export function DashboardAntiHabitCard({ antiHabit, checkedToday, streak, cleanDays }: Props) {
   const [isPending, startTransition] = useTransition()
+  const color = getColor(antiHabit.id)
 
   function handleCheck() {
     startTransition(async () => {
-      if (checkedToday) {
-        await uncheckinAntiHabit(antiHabit.id)
-      } else {
-        await checkinAntiHabit(antiHabit.id)
-      }
+      if (checkedToday) await uncheckinAntiHabit(antiHabit.id)
+      else await checkinAntiHabit(antiHabit.id)
     })
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
+    <div
+      className={`flex items-center gap-3 rounded-2xl p-3 transition-opacity ${isPending ? 'opacity-60' : ''}`}
+      style={{ backgroundColor: color }}
+    >
       <button
         onClick={handleCheck}
         disabled={isPending}
-        className={`h-8 w-8 shrink-0 rounded-lg border-2 flex items-center justify-center text-base transition-all ${
-          checkedToday
-            ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400'
-            : 'border-border bg-transparent hover:border-primary/50'
+        className={`h-10 w-10 shrink-0 rounded-full flex items-center justify-center transition-all ${
+          checkedToday ? 'bg-white text-gray-800' : 'bg-white/25 text-white'
         }`}
       >
-        {checkedToday ? <ShieldCheck className="h-4 w-4" /> : antiHabit.emoji}
+        {checkedToday
+          ? <ShieldCheck className="h-5 w-5" />
+          : <span className="text-sm font-bold">{antiHabit.emoji || antiHabit.name.charAt(0).toUpperCase()}</span>
+        }
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">{antiHabit.name}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <Flame className="h-3 w-3 text-orange-400" />
-          <span className="text-orange-400">{streak} días de racha</span>
-          <span className="text-muted-foreground">· {cleanDays} limpio</span>
+        <p className="text-sm font-bold text-white">{antiHabit.name}</p>
+        <p className="text-xs text-white/70 flex items-center gap-1">
+          <Flame className="h-3 w-3" /> {streak} days · {cleanDays} clean
         </p>
       </div>
 

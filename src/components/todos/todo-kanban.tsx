@@ -5,13 +5,12 @@ import { updateTodoStatus, deleteTodo } from '@/app/actions/todos'
 import { URGENCY_CONFIG } from '@/lib/utils'
 import { Trash2 } from 'lucide-react'
 import { format, parseISO, isPast, isToday } from 'date-fns'
-import { es } from 'date-fns/locale'
 import type { TodoWithCategory, TodoStatus } from '@/lib/types'
 
 const COLUMNS: { id: TodoStatus; label: string; color: string }[] = [
-  { id: 'pending', label: 'Pendiente', color: 'border-border' },
-  { id: 'in_progress', label: 'En progreso', color: 'border-blue-500/50' },
-  { id: 'done', label: 'Hecho', color: 'border-emerald-500/50' },
+  { id: 'pending', label: 'Pending', color: 'border-border' },
+  { id: 'in_progress', label: 'In progress', color: 'border-blue-500/50' },
+  { id: 'done', label: 'Done', color: 'border-emerald-500/50' },
 ]
 
 interface Props {
@@ -39,7 +38,7 @@ function KanbanCard({ todo }: { todo: TodoWithCategory }) {
         )}
         {todo.deadline && (
           <span className={`text-xs ${isOverdue ? 'text-red-400' : 'text-muted-foreground'}`}>
-            {isOverdue ? '⚠️ ' : ''}{format(parseISO(todo.deadline), "d MMM", { locale: es })}
+            {isOverdue ? 'Overdue · ' : ''}{format(parseISO(todo.deadline), 'd MMM')}
           </span>
         )}
       </div>
@@ -54,7 +53,7 @@ function KanbanCard({ todo }: { todo: TodoWithCategory }) {
           </button>
         ))}
         <button
-          onClick={() => { if (confirm('¿Eliminar?')) startTransition(() => deleteTodo(todo.id)) }}
+          onClick={() => { if (confirm('Delete?')) startTransition(() => deleteTodo(todo.id)) }}
           className="ml-auto p-1 hover:text-destructive text-muted-foreground transition-colors"
         >
           <Trash2 className="h-3.5 w-3.5" />
@@ -78,7 +77,7 @@ export function TodoKanban({ todos }: Props) {
             <div className="space-y-2">
               {colTodos.map((todo) => <KanbanCard key={todo.id} todo={todo} />)}
               {colTodos.length === 0 && (
-                <p className="text-xs text-muted-foreground text-center py-4">Sin tareas</p>
+                <p className="text-xs text-muted-foreground text-center py-4">Empty</p>
               )}
             </div>
           </div>

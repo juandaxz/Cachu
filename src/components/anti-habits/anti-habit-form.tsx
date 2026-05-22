@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { today } from '@/lib/utils'
 import { Plus } from 'lucide-react'
 
-const EMOJIS = ['🚫', '🚬', '🍺', '🎰', '📱', '🍔', '😤', '💊', '🛑', '⚠️']
+const EMOJIS = ['🚬', '🍺', '🍔', '📱', '🎰', '🍬', '☕', '🎮', '🛒', '🍷', '🌿', '🍫', '🧁', '🍕', '🥤', '💊']
 
 export function AntiHabitForm() {
   const [open, setOpen] = useState(false)
@@ -38,28 +38,28 @@ export function AntiHabitForm() {
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          Agregar
+          Add
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Hábito a dejar</DialogTitle>
+          <DialogTitle>Habit to quit</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">¿Qué quieres dejar?</Label>
-            <Input id="name" name="name" placeholder="Ej: Fumar, ver pornografía, alcohol..." required />
+            <Label htmlFor="name">What do you want to quit?</Label>
+            <Input id="name" name="name" placeholder="e.g. Smoking, alcohol, social media..." required />
           </div>
 
           <div className="space-y-2">
             <Label>Emoji</Label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {EMOJIS.map((e) => (
                 <button
                   key={e}
                   type="button"
                   onClick={() => setEmoji(e)}
-                  className={`text-xl p-1.5 rounded-lg border transition-all ${emoji === e ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
+                  className={`h-8 w-8 rounded-lg text-lg flex items-center justify-center transition-all ${emoji === e ? 'bg-primary/20 ring-2 ring-primary' : 'bg-secondary hover:bg-secondary/80'}`}
                 >
                   {e}
                 </button>
@@ -68,7 +68,7 @@ export function AntiHabitForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="start_date">¿Cuándo empezaste a estar limpio?</Label>
+            <Label htmlFor="start_date">When did you start being clean?</Label>
             <Input
               id="start_date"
               name="start_date"
@@ -82,10 +82,10 @@ export function AntiHabitForm() {
 
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Guardando...' : 'Guardar'}
+              {isPending ? 'Saving...' : 'Save'}
             </Button>
           </div>
         </form>

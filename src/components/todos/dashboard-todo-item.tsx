@@ -3,9 +3,14 @@
 import { useState, useEffect, useTransition } from 'react'
 import { completeTodoFromDashboard } from '@/app/actions/todos'
 import { format, parseISO, isPast, isToday } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { URGENCY_CONFIG } from '@/lib/utils'
 import type { Urgency } from '@/lib/types'
+
+const URGENCY_COLOR: Record<string, string> = {
+  risk: '#dc2626',
+  high: '#ea580c',
+  medium: '#ca8a04',
+  low: '#2563eb',
+}
 
 interface DashboardTodo {
   id: string
@@ -24,14 +29,12 @@ function todayKey(id: string) {
 export function DashboardTodoItem({ todo }: { todo: DashboardTodo }) {
   const [done, setDone] = useState(todo.status === 'done')
   const [isPending, startTransition] = useTransition()
+  const color = URGENCY_COLOR[todo.urgency as Urgency] ?? '#475569'
+  const isOverdue = todo.deadline && isPast(parseISO(todo.deadline)) && !isToday(parseISO(todo.deadline))
 
-  // Restore done state from localStorage (persists until end of day)
   useEffect(() => {
     if (localStorage.getItem(todayKey(todo.id)) === '1') setDone(true)
   }, [todo.id])
-
-  const urgency = URGENCY_CONFIG[todo.urgency as Urgency]
-  const isOverdue = todo.deadline && isPast(parseISO(todo.deadline)) && !isToday(parseISO(todo.deadline))
 
   function handleCheck() {
     if (done) return
@@ -41,35 +44,31 @@ export function DashboardTodoItem({ todo }: { todo: DashboardTodo }) {
   }
 
   return (
-    <div className={`flex items-start gap-3 rounded-xl border bg-card p-3 transition-colors ${done ? 'border-border/40 opacity-60' : 'border-border'}`}>
+    <div
+      className={`flex items-center gap-3 rounded-2xl p-3 transition-opacity ${isPending || done ? 'opacity-60' : ''}`}
+      style={{ backgroundColor: color }}
+    >
       <button
         onClick={handleCheck}
         disabled={isPending || done}
-        className={`mt-0.5 h-5 w-5 shrink-0 rounded border-2 flex items-center justify-center transition-all ${
-          done
-            ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400'
-            : 'border-border hover:border-primary/60'
+        className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center transition-all ${
+          done ? 'bg-white text-gray-800' : 'bg-white/25 text-white'
         }`}
       >
-        {done && <span className="text-xs">✓</span>}
+        {done ? '✓' : null}
       </button>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium transition-all ${done ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+        <p className={`text-sm font-bold text-white transition-all ${done ? 'line-through' : ''}`}>
           {todo.title}
         </p>
-        <div className="flex items-center gap-2 mt-1">
-          <span className={`shrink-0 rounded border px-1.5 py-0.5 text-xs font-semibold ${urgency.color}`}>
-            {urgency.label}
-          </span>
+        <div className="flex items-center gap-2 mt-0.5">
           {todo.todo_categories && (
-            <span className="text-xs truncate" style={{ color: todo.todo_categories.color }}>
-              {todo.todo_categories.name}
-            </span>
+            <span className="text-xs text-white/70">{todo.todo_categories.name}</span>
           )}
           {todo.deadline && (
-            <span className={`text-xs shrink-0 ${isOverdue && !done ? 'text-red-400' : 'text-muted-foreground'}`}>
-              {isOverdue && !done ? '⚠️ ' : ''}{format(parseISO(todo.deadline), 'd MMM', { locale: es })}
+            <span className={`text-xs ${isOverdue && !done ? 'text-white font-medium' : 'text-white/60'}`}>
+              {isOverdue && !done ? 'Overdue · ' : ''}{format(parseISO(todo.deadline), 'd MMM')}
             </span>
           )}
         </div>

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Plus } from 'lucide-react'
 
 const COLORS = ['#10b981', '#6366f1', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#8b5cf6', '#14b8a6']
-const EMOJIS = ['✅', '💪', '📚', '🏃', '🧘', '💧', '🥗', '😴', '🎯', '🎸', '✍️', '🌿']
+const EMOJIS = ['🏃', '🏋️', '📚', '💧', '🧘', '🎯', '💤', '🥗', '🎵', '✍️', '🧠', '🚴', '🌅', '🍎', '🧹', '🌱', '🏊', '🎨', '🤸', '💊']
 
 export function HabitForm() {
   const [open, setOpen] = useState(false)
@@ -43,41 +43,41 @@ export function HabitForm() {
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          Nuevo hábito
+          New habit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nuevo hábito</DialogTitle>
+          <DialogTitle>New habit</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nombre</Label>
-            <Input id="name" name="name" placeholder="Ej: Hacer ejercicio" required />
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" name="name" placeholder="e.g. Exercise daily" required />
           </div>
 
           <div className="space-y-2">
-            <Label>Tipo</Label>
+            <Label>Type</Label>
             <Select value={type} onValueChange={setType}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="boolean">Sí / No (hice o no hice)</SelectItem>
-                <SelectItem value="count">Contador (cuántas veces)</SelectItem>
+                <SelectItem value="boolean">Yes / No (did or didn&apos;t)</SelectItem>
+                <SelectItem value="count">Counter (how many times)</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
             <Label>Emoji</Label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {EMOJIS.map((e) => (
                 <button
                   key={e}
                   type="button"
                   onClick={() => setEmoji(e)}
-                  className={`text-xl p-1.5 rounded-lg border transition-all ${emoji === e ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
+                  className={`h-8 w-8 rounded-lg text-lg flex items-center justify-center transition-all ${emoji === e ? 'bg-primary/20 ring-2 ring-primary' : 'bg-secondary hover:bg-secondary/80'}`}
                 >
                   {e}
                 </button>
@@ -104,10 +104,10 @@ export function HabitForm() {
 
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Guardando...' : 'Crear hábito'}
+              {isPending ? 'Saving...' : 'Create habit'}
             </Button>
           </div>
         </form>

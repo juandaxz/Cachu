@@ -57,8 +57,8 @@ export default async function TodosPage({ searchParams }: { searchParams: Promis
     <div className="space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tareas</h1>
-          <p className="text-sm text-muted-foreground">{todos.length} tarea{todos.length !== 1 ? 's' : ''}</p>
+          <h1 className="text-2xl font-bold text-foreground">Tasks</h1>
+          <p className="text-sm text-muted-foreground">{todos.length} task{todos.length !== 1 ? 's' : ''}</p>
         </div>
         <TodoForm categories={categories} />
       </div>
@@ -69,8 +69,7 @@ export default async function TodosPage({ searchParams }: { searchParams: Promis
 
       {todos.length === 0 ? (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">✅</p>
-          <p className="text-muted-foreground">Sin tareas pendientes. ¡Todo al día!</p>
+          <p className="text-muted-foreground">No pending tasks. All caught up.</p>
         </div>
       ) : view === 'kanban' ? (
         <TodoKanban todos={todos} />

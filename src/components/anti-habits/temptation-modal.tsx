@@ -37,48 +37,48 @@ export function TemptationModal({ antiHabit, streak }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-orange-400 border-orange-500/30 hover:bg-orange-500/10 shrink-0">
+        <Button variant="outline" size="sm" className="border-white/30 bg-white/20 text-white hover:bg-white/35 shrink-0">
           <AlertTriangle className="h-3 w-3" />
-          <span className="hidden sm:inline">Estoy a punto de caer</span>
+          <span className="hidden sm:inline">I&apos;m about to give in</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl">{antiHabit.emoji}</DialogTitle>
+          <DialogTitle className="text-center text-base font-semibold">{antiHabit.name}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 text-center space-y-2">
             <p className="text-base font-semibold text-foreground">{message}</p>
             {streak > 0 && (
               <p className="text-sm text-muted-foreground">
-                Llevas <span className="text-orange-400 font-bold">{streak} días</span> sin {antiHabit.name.toLowerCase()}.
-                <br />No lo tires a la basura.
+                You&apos;ve gone <span className="text-orange-400 font-bold">{streak} days</span> without {antiHabit.name.toLowerCase()}.
+                <br />Don&apos;t throw it away.
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">¿Qué está disparando esto? (opcional)</p>
+            <p className="text-sm text-muted-foreground">What&apos;s triggering this? (optional)</p>
             <Textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Escribe lo que sientes ahora mismo..."
+              placeholder="Write what you're feeling right now..."
               rows={3}
             />
           </div>
 
           {saved ? (
             <div className="text-center text-sm text-emerald-400 font-medium py-2">
-              ✓ Guardado. ¡Tú puedes!
+              Saved. You can do it!
             </div>
           ) : (
             <div className="flex gap-2">
               <Button variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-                Cerrar
+                Close
               </Button>
               {note.trim() && (
                 <Button className="flex-1" onClick={handleSave} disabled={isPending}>
-                  Guardar nota
+                  Save note
                 </Button>
               )}
             </div>

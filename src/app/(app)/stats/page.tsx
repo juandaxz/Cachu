@@ -1,8 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
-import { buildCheckinMap, buildYearGrid, calcHabitStreak, calcAntiHabitStreak } from '@/lib/utils'
+import { buildCheckinMap, calcHabitStreak, calcAntiHabitStreak } from '@/lib/utils'
 import { Heatmap } from '@/components/heatmap'
 import { Flame } from 'lucide-react'
-import { format } from 'date-fns'
 
 export default async function StatsPage() {
   const supabase = await createClient()
@@ -26,7 +25,6 @@ export default async function StatsPage() {
   const habits = habitsRes.data ?? []
   const antiHabits = antiHabitsRes.data ?? []
 
-  // Build global heatmap: value = number of habits completed that day
   const allDatesMap: Record<string, number> = {}
   habits.forEach((habit) => {
     const checkinMap = buildCheckinMap(habit.habit_checkins ?? [])
@@ -38,22 +36,20 @@ export default async function StatsPage() {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Estadísticas</h1>
-        <p className="text-sm text-muted-foreground">Tu progreso del último año</p>
+        <h1 className="text-2xl font-bold text-foreground">Statistics</h1>
+        <p className="text-sm text-muted-foreground">Your progress over the past year</p>
       </div>
 
-      {/* Global habit heatmap */}
       {habits.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Actividad general de hábitos</h2>
+          <h2 className="text-lg font-semibold text-foreground">Overall habit activity</h2>
           <div className="rounded-xl border border-border bg-card p-4">
             <Heatmap
               valueMap={allDatesMap}
               maxValue={Math.max(habits.length, 1)}
-              label={`Intensidad = cuántos de tus ${habits.length} hábitos completaste ese día`}
+              label={`Intensity: how many of your ${habits.length} habits you completed that day`}
             />
           </div>
-          {/* Per-habit summary */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {habits.map((habit) => {
               const checkinMap = buildCheckinMap(habit.habit_checkins ?? [])
@@ -62,16 +58,16 @@ export default async function StatsPage() {
               return (
                 <div key={habit.id} className="rounded-xl border border-border bg-card p-3 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">{habit.emoji}</span>
+                    <div className="h-6 w-6 rounded-md shrink-0" style={{ backgroundColor: habit.color }} />
                     <div>
                       <p className="text-sm font-medium text-foreground">{habit.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} racha</span>
-                        <span>· {total} días totales</span>
+                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
+                        <span>· {total} total days</span>
                       </div>
                     </div>
                   </div>
-                  <Heatmap valueMap={checkinMap} />
+                  <Heatmap valueMap={checkinMap} compact />
                 </div>
               )
             })}
@@ -79,10 +75,9 @@ export default async function StatsPage() {
         </section>
       )}
 
-      {/* Anti-habit heatmaps */}
       {antiHabits.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Rachas de hábitos a dejar</h2>
+          <h2 className="text-lg font-semibold text-foreground">Quit habit streaks</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {antiHabits.map((ah) => {
               const checkinMap: Record<string, number> = {}
@@ -94,16 +89,16 @@ export default async function StatsPage() {
               return (
                 <div key={ah.id} className="rounded-xl border border-border bg-card p-3 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl">{ah.emoji}</span>
+                    <div className="h-6 w-6 rounded-md shrink-0 bg-secondary" />
                     <div>
                       <p className="text-sm font-medium text-foreground">{ah.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} racha</span>
+                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
                         <span>· {totalCheckins} check-ins</span>
                       </div>
                     </div>
                   </div>
-                  <Heatmap valueMap={checkinMap} label="Días limpio" />
+                  <Heatmap valueMap={checkinMap} label="Clean days" compact />
                 </div>
               )
             })}
@@ -113,8 +108,7 @@ export default async function StatsPage() {
 
       {habits.length === 0 && antiHabits.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-4xl">📊</p>
-          <p className="text-muted-foreground">Sin datos aún. Agrega hábitos y empieza a hacer check-in.</p>
+          <p className="text-muted-foreground">No data yet. Add habits and start checking in.</p>
         </div>
       )}
     </div>

@@ -9,9 +9,9 @@ import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/', icon: Home, label: 'Home' },
-  { href: '/habits', icon: Target, label: 'Hábitos' },
-  { href: '/anti-habits', icon: ShieldOff, label: 'Dejar' },
-  { href: '/todos', icon: CheckSquare, label: 'Tareas' },
+  { href: '/habits', icon: Target, label: 'Habits' },
+  { href: '/anti-habits', icon: ShieldOff, label: 'Quit' },
+  { href: '/todos', icon: CheckSquare, label: 'Tasks' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
 
@@ -31,7 +31,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar (desktop) */}
       <aside className="hidden md:flex flex-col w-56 border-r border-border p-4 gap-1 shrink-0">
         <div className="flex items-center gap-2 px-2 py-3 mb-4">
-          <span className="text-2xl">🦆</span>
           <span className="font-bold text-lg text-foreground">Cachuflin</span>
         </div>
 
@@ -60,7 +59,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
           >
             <LogOut className="h-4 w-4" />
-            Cerrar sesión
+            Sign out
           </button>
         </div>
       </aside>
@@ -70,7 +69,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🦆</span>
             <span className="font-bold text-foreground">Cachuflin</span>
           </div>
           <button
@@ -82,7 +80,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page content */}
-        <div className="flex-1 p-4 md:p-6 pb-24 md:pb-6 overflow-auto">
+        <div className="flex-1 p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto overflow-x-hidden">
           {children}
         </div>
 
