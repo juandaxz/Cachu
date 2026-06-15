@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Target, ShieldOff, CheckSquare, BarChart2, LogOut } from 'lucide-react'
+import { Home, Target, ShieldOff, CheckSquare, BarChart2, LogOut, Sun, Moon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -14,6 +15,36 @@ const NAV_ITEMS = [
   { href: '/todos', icon: CheckSquare, label: 'Tasks' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
+
+function ThemeToggle() {
+  const [dark, setDark] = useState(false)
+
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains('dark'))
+  }, [])
+
+  function toggle() {
+    const next = !dark
+    setDark(next)
+    if (next) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }
+
+  return (
+    <button
+      onClick={toggle}
+      className="p-2 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+      aria-label="Toggle theme"
+    >
+      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </button>
+  )
+}
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -31,7 +62,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar (desktop) */}
       <aside className="hidden md:flex flex-col w-56 border-r border-border p-4 gap-1 shrink-0">
         <div className="flex items-center gap-2 px-2 py-3 mb-4">
-          <span className="font-bold text-lg text-foreground">Cachuflin</span>
+          <span className="font-bold text-lg text-foreground">Balancepol</span>
         </div>
 
         {NAV_ITEMS.map((item) => {
@@ -53,7 +84,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           )
         })}
 
-        <div className="mt-auto">
+        <div className="mt-auto flex flex-col gap-1">
+          <ThemeToggle />
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
@@ -69,14 +101,17 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-foreground">Cachuflin</span>
+            <span className="font-bold text-foreground">Balancepol</span>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-muted-foreground hover:text-foreground transition-colors p-1"
-          >
-            <LogOut className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <button
+              onClick={handleLogout}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </header>
 
         {/* Page content */}

@@ -9,12 +9,10 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Plus } from 'lucide-react'
 
-const COLORS = ['#10b981', '#6366f1', '#f59e0b', '#ec4899', '#3b82f6', '#ef4444', '#8b5cf6', '#14b8a6']
 const EMOJIS = ['🏃', '🏋️', '📚', '💧', '🧘', '🎯', '💤', '🥗', '🎵', '✍️', '🧠', '🚴', '🌅', '🍎', '🧹', '🌱', '🏊', '🎨', '🤸', '💊']
 
 export function HabitForm() {
   const [open, setOpen] = useState(false)
-  const [color, setColor] = useState(COLORS[0])
   const [emoji, setEmoji] = useState(EMOJIS[0])
   const [type, setType] = useState('boolean')
   const [isPending, startTransition] = useTransition()
@@ -23,9 +21,9 @@ export function HabitForm() {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
-    formData.set('color', color)
     formData.set('emoji', emoji)
     formData.set('type', type)
+    formData.set('color', '#1e3a5f')
 
     startTransition(async () => {
       const result = await createHabit(formData)
@@ -43,28 +41,28 @@ export function HabitForm() {
       <DialogTrigger asChild>
         <Button size="sm">
           <Plus className="h-4 w-4" />
-          New habit
+          Nuevo hábito
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New habit</DialogTitle>
+          <DialogTitle>Nuevo hábito</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" placeholder="e.g. Exercise daily" required />
+            <Label htmlFor="name">Nombre</Label>
+            <Input id="name" name="name" placeholder="ej. Ejercicio diario" required />
           </div>
 
           <div className="space-y-2">
-            <Label>Type</Label>
+            <Label>Tipo</Label>
             <Select value={type} onValueChange={setType}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="boolean">Yes / No (did or didn&apos;t)</SelectItem>
-                <SelectItem value="count">Counter (how many times)</SelectItem>
+                <SelectItem value="boolean">Sí / No (hecho o no)</SelectItem>
+                <SelectItem value="count">Contador (cuántas veces)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -77,25 +75,10 @@ export function HabitForm() {
                   key={e}
                   type="button"
                   onClick={() => setEmoji(e)}
-                  className={`h-8 w-8 rounded-lg text-lg flex items-center justify-center transition-all ${emoji === e ? 'bg-primary/20 ring-2 ring-primary' : 'bg-secondary hover:bg-secondary/80'}`}
+                  className={`h-8 w-8 rounded-lg text-lg flex items-center justify-center transition-all ${emoji === e ? 'bg-primary/10 ring-2 ring-primary' : 'bg-secondary hover:bg-secondary/80'}`}
                 >
                   {e}
                 </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Color</Label>
-            <div className="flex gap-2">
-              {COLORS.map((c) => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`h-7 w-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-offset-card ring-white' : ''}`}
-                  style={{ backgroundColor: c }}
-                />
               ))}
             </div>
           </div>
@@ -104,10 +87,10 @@ export function HabitForm() {
 
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Saving...' : 'Create habit'}
+              {isPending ? 'Guardando...' : 'Crear hábito'}
             </Button>
           </div>
         </form>

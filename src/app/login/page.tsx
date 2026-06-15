@@ -22,13 +22,13 @@ function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-foreground">Cachuflin</h1>
-          <p className="text-muted-foreground">Your personal habits & productivity app</p>
+          <h1 className="text-3xl font-bold text-foreground">Balancepol</h1>
+          <p className="text-muted-foreground">App de hábitos y productividad personal</p>
         </div>
 
         {error && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-            An error occurred signing in. Please try again.
+            Ocurrió un error al iniciar sesión. Por favor intenta de nuevo.
           </div>
         )}
 
@@ -54,12 +54,8 @@ function LoginForm() {
               fill="#EA4335"
             />
           </svg>
-          Continue with Google
+          Continuar con Google
         </button>
-
-        <p className="text-center text-xs text-muted-foreground">
-          Only you have access to this app.
-        </p>
       </div>
     </div>
   )

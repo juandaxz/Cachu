@@ -58,11 +58,13 @@ export default async function StatsPage() {
               return (
                 <div key={habit.id} className="rounded-xl border border-border bg-card p-3 space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-md shrink-0" style={{ backgroundColor: habit.color }} />
+                    <div className="h-6 w-6 rounded-md shrink-0 bg-secondary flex items-center justify-center text-sm">
+                      {habit.emoji || habit.name.charAt(0).toUpperCase()}
+                    </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">{habit.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
+                        <span className="text-primary flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
                         <span>· {total} total days</span>
                       </div>
                     </div>
@@ -93,7 +95,7 @@ export default async function StatsPage() {
                     <div>
                       <p className="text-sm font-medium text-foreground">{ah.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span className="text-orange-400 flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
+                        <span className="text-primary flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
                         <span>· {totalCheckins} check-ins</span>
                       </div>
                     </div>

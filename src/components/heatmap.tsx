@@ -21,10 +21,10 @@ function getIntensity(value: number, max: number): number {
 
 const INTENSITY_COLORS = [
   'bg-secondary',
-  'bg-emerald-900/60',
-  'bg-emerald-700/70',
-  'bg-emerald-600',
-  'bg-emerald-400',
+  'bg-primary/20',
+  'bg-primary/40',
+  'bg-primary/70',
+  'bg-primary',
 ]
 
 function hexToRgb(hex: string): string {
@@ -38,7 +38,7 @@ function hexToRgb(hex: string): string {
 
 function getDotStyle(intensity: number, color?: string): React.CSSProperties {
   if (!color) return {}
-  if (intensity === 0) return { backgroundColor: 'rgba(255,255,255,0.07)' }
+  if (intensity === 0) return { backgroundColor: 'hsl(var(--secondary))' }
   const opacities = [0, 0.25, 0.5, 0.75, 1.0]
   return { backgroundColor: `rgba(${hexToRgb(color)},${opacities[intensity]})` }
 }

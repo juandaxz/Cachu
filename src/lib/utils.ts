@@ -141,16 +141,16 @@ export function buildHistoryGrid(valueMap: Record<string, number>, weekCount = 1
 
 // Get urgency label and color
 export const URGENCY_CONFIG = {
-  low: { label: 'Low', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  medium: { label: 'Medium', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
-  high: { label: 'High', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  risk: { label: 'RISK', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
+  low: { label: 'Low', color: 'bg-secondary text-muted-foreground border-border' },
+  medium: { label: 'Medium', color: 'bg-primary/10 text-primary border-primary/20' },
+  high: { label: 'High', color: 'bg-primary/20 text-primary border-primary/30' },
+  risk: { label: 'RISK', color: 'bg-destructive/10 text-destructive border-destructive/30' },
 } as const
 
 export const STATUS_CONFIG = {
   pending: { label: 'Pendiente', color: 'text-muted-foreground' },
-  in_progress: { label: 'En progreso', color: 'text-blue-400' },
-  done: { label: 'Hecho', color: 'text-green-400' },
+  in_progress: { label: 'En progreso', color: 'text-primary' },
+  done: { label: 'Hecho', color: 'text-foreground' },
 } as const
 
 export const MOTIVATIONAL_MESSAGES = [
