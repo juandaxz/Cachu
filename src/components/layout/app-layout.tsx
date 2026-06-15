@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Target, ShieldOff, CheckSquare, BarChart2, LogOut, Sun, Moon } from 'lucide-react'
+import { Home, Target, ShieldOff, CheckSquare, BarChart2, CalendarDays, Settings, LogOut, Sun, Moon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -13,6 +13,15 @@ const NAV_ITEMS = [
   { href: '/habits', icon: Target, label: 'Habits' },
   { href: '/anti-habits', icon: ShieldOff, label: 'Quit' },
   { href: '/todos', icon: CheckSquare, label: 'Tasks' },
+  { href: '/calendar', icon: CalendarDays, label: 'Calendario' },
+  { href: '/stats', icon: BarChart2, label: 'Stats' },
+]
+
+const BOTTOM_NAV_ITEMS = [
+  { href: '/', icon: Home, label: 'Home' },
+  { href: '/habits', icon: Target, label: 'Habits' },
+  { href: '/todos', icon: CheckSquare, label: 'Tasks' },
+  { href: '/calendar', icon: CalendarDays, label: 'Cal' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
 
@@ -85,13 +94,25 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         })}
 
         <div className="mt-auto flex flex-col gap-1">
+          <Link
+            href="/settings"
+            className={cn(
+              'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+              pathname === '/settings'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+            )}
+          >
+            <Settings className="h-4 w-4" />
+            Configuración
+          </Link>
           <ThemeToggle />
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
           >
             <LogOut className="h-4 w-4" />
-            Sign out
+            Cerrar sesión
           </button>
         </div>
       </aside>
@@ -122,7 +143,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Bottom nav (mobile) */}
         <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border bg-card/95 backdrop-blur-md">
           <div className="flex">
-            {NAV_ITEMS.map((item) => {
+            {BOTTOM_NAV_ITEMS.map((item) => {
               const active = pathname === item.href
               return (
                 <Link
