@@ -37,7 +37,7 @@ export function TodoFilters({ categories, currentView }: Props) {
           className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${currentView !== 'kanban' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
         >
           <LayoutList className="h-4 w-4" />
-          List
+          Lista
         </button>
         <button
           onClick={() => update('view', 'kanban')}
@@ -52,14 +52,14 @@ export function TodoFilters({ categories, currentView }: Props) {
             onClick={() => update('status', status === 'done' ? null : 'done')}
             className={`ml-auto text-xs rounded-lg px-3 py-1.5 border transition-colors ${status === 'done' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
           >
-            Show completed
+            Ver completadas
           </button>
         )}
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs text-muted-foreground self-center">Urgency:</span>
+        <span className="text-xs text-muted-foreground self-center">Urgencia:</span>
         {(Object.entries(URGENCY_CONFIG) as [string, typeof URGENCY_CONFIG[keyof typeof URGENCY_CONFIG]][]).map(([key, cfg]) => (
           <button
             key={key}
@@ -72,13 +72,16 @@ export function TodoFilters({ categories, currentView }: Props) {
 
         {categories.length > 0 && (
           <>
-            <span className="text-xs text-muted-foreground self-center ml-2">Category:</span>
+            <span className="text-xs text-muted-foreground self-center ml-2">Categoría:</span>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => update('category', category === cat.id ? null : cat.id)}
-                className={`rounded-md border px-2 py-0.5 text-xs font-medium transition-all ${category === cat.id ? 'border-current opacity-100' : 'border-border text-muted-foreground hover:border-primary/30'}`}
-                style={category === cat.id ? { color: cat.color, borderColor: cat.color } : {}}
+                className={`rounded-md border px-2 py-0.5 text-xs font-medium transition-all ${
+                  category === cat.id
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/30'
+                }`}
               >
                 {cat.name}
               </button>
