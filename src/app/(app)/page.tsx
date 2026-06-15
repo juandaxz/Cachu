@@ -65,11 +65,11 @@ export default async function DashboardPage() {
           <p className="text-xs text-muted-foreground mt-1">Habits today</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <p className="text-2xl font-bold text-emerald-400">{antiHabits.length}</p>
+          <p className="text-2xl font-bold text-primary">{antiHabits.length}</p>
           <p className="text-xs text-muted-foreground mt-1">In control</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <p className="text-2xl font-bold text-yellow-400">{pendingTodos}</p>
+          <p className="text-2xl font-bold text-primary">{pendingTodos}</p>
           <p className="text-xs text-muted-foreground mt-1">Pending tasks</p>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-2">
-            {todos.map((todo) => (
+            {todos.filter((t) => t.status !== 'done').slice(0, 5).map((todo) => (
               <DashboardTodoItem key={todo.id} todo={todo} />
             ))}
           </div>
