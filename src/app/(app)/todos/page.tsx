@@ -105,10 +105,10 @@ export default async function TodosPage({ searchParams }: { searchParams: Promis
   todos.sort((a, b) => (urgencyOrder[a.urgency as Urgency] ?? 3) - (urgencyOrder[b.urgency as Urgency] ?? 3))
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-4 md:space-y-6 max-w-3xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tareas</h1>
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">Tareas</h1>
           {view !== 'calendar' && (
             <p className="text-sm text-muted-foreground">
               {todos.length} {todos.length === 1 ? 'tarea' : 'tareas'}

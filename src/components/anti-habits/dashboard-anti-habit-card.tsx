@@ -24,28 +24,28 @@ export function DashboardAntiHabitCard({ antiHabit, checkedToday, streak, cleanD
   }
 
   return (
-    <div className={`flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition-opacity ${isPending ? 'opacity-60' : ''}`}>
-      <div className="h-8 w-8 shrink-0 rounded-lg bg-secondary flex items-center justify-center text-base">
+    <div className={`flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 md:py-2.5 transition-opacity ${isPending ? 'opacity-60' : ''}`}>
+      <div className="h-7 w-7 md:h-8 md:w-8 shrink-0 rounded-lg bg-secondary flex items-center justify-center text-sm md:text-base">
         {antiHabit.emoji || antiHabit.name.charAt(0).toUpperCase()}
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">{antiHabit.name}</p>
-        <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <Flame className="h-3 w-3 text-primary" /> {streak} días · {cleanDays} limpio
+        <p className="text-sm font-medium text-foreground leading-tight">{antiHabit.name}</p>
+        <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
+          <Flame className="h-2.5 w-2.5 text-primary" /> {streak} días · {cleanDays} limpio
         </p>
       </div>
 
       <button
         onClick={handleCheck}
         disabled={isPending}
-        className={`h-8 w-8 shrink-0 rounded-full flex items-center justify-center transition-all border-2 ${
+        className={`h-7 w-7 md:h-8 md:w-8 shrink-0 rounded-full flex items-center justify-center transition-all border-2 ${
           checkedToday
             ? 'bg-primary border-primary text-primary-foreground'
             : 'bg-transparent border-border text-muted-foreground hover:border-primary hover:text-primary'
         }`}
       >
-        <ShieldCheck className="h-3.5 w-3.5" />
+        <ShieldCheck className="h-3 w-3 md:h-3.5 md:w-3.5" />
       </button>
 
       <TemptationModal antiHabit={antiHabit} streak={streak} />

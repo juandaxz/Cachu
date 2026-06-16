@@ -67,26 +67,26 @@ export default async function DashboardPage() {
   const pendingTodos = todos.filter((t) => t.status === 'pending' || t.status === 'in_progress').length
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div>
-        <p className="text-muted-foreground text-sm capitalize">{dayLabel}</p>
+        <p className="text-muted-foreground text-xs md:text-sm capitalize">{dayLabel}</p>
         <Greeting />
       </div>
 
       {/* Quick stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <p className="text-2xl font-bold text-primary">{checkedToday}/{totalHabits}</p>
-          <p className="text-xs text-muted-foreground mt-1">Hábitos hoy</p>
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
+        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
+          <p className="text-xl md:text-2xl font-bold text-primary">{checkedToday}/{totalHabits}</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Hábitos hoy</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <p className="text-2xl font-bold text-primary">{antiHabits.length}</p>
-          <p className="text-xs text-muted-foreground mt-1">Bajo control</p>
+        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
+          <p className="text-xl md:text-2xl font-bold text-primary">{antiHabits.length}</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Bajo control</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-3 text-center">
-          <p className="text-2xl font-bold text-primary">{pendingTodos}</p>
-          <p className="text-xs text-muted-foreground mt-1">Tareas pendientes</p>
+        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
+          <p className="text-xl md:text-2xl font-bold text-primary">{pendingTodos}</p>
+          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Pendientes</p>
         </div>
       </div>
 
@@ -98,10 +98,10 @@ export default async function DashboardPage() {
 
       {/* Anti-habits check-in */}
       {antiHabits.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2 md:space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Rachas activas</h2>
-            <Link href="/anti-habits" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
+            <h2 className="text-sm font-semibold text-foreground md:text-base">Rachas activas</h2>
+            <Link href="/habits?tab=dejar" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
@@ -126,14 +126,14 @@ export default async function DashboardPage() {
 
       {/* Todos */}
       {todos.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2 md:space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Tareas</h2>
+            <h2 className="text-sm font-semibold text-foreground md:text-base">Tareas</h2>
             <Link href="/todos" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5 md:space-y-2">
             {todos.filter((t) => t.status !== 'done').slice(0, 5).map((todo) => (
               <DashboardTodoItem key={todo.id} todo={todo} />
             ))}
@@ -143,33 +143,33 @@ export default async function DashboardPage() {
 
       {/* Calendar upcoming */}
       {calendarEvents.length > 0 && (
-        <section className="space-y-3">
+        <section className="space-y-2 md:space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-foreground md:text-base flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
               Próximas entregas
             </h2>
-            <Link href="/calendar" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
+            <Link href="/todos?view=calendar" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5 md:space-y-2">
             {calendarEvents.slice(0, 5).map((event) => {
               let dateLabel: string
               if (isToday(event.start)) dateLabel = 'Hoy'
               else if (isTomorrow(event.start)) dateLabel = 'Mañana'
               else dateLabel = format(event.start, "EEE d MMM", { locale: es })
               return (
-                <div key={event.uid} className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
-                  <div className="shrink-0 text-center min-w-[44px]">
+                <div key={event.uid} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 md:px-4 md:py-3">
+                  <div className="shrink-0 text-center min-w-[40px]">
                     <p className="text-[10px] text-muted-foreground uppercase leading-none">{dateLabel}</p>
-                    <p className="text-sm font-semibold text-primary flex items-center gap-1 mt-0.5">
-                      <Clock className="h-3 w-3" />{format(event.start, 'HH:mm')}
+                    <p className="text-xs font-semibold text-primary flex items-center gap-0.5 mt-0.5">
+                      <Clock className="h-2.5 w-2.5" />{format(event.start, 'HH:mm')}
                     </p>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{event.title}</p>
-                    {event.courseName && <p className="text-xs text-muted-foreground truncate">{event.courseName}</p>}
+                    <p className="text-xs font-medium text-foreground truncate md:text-sm">{event.title}</p>
+                    {event.courseName && <p className="text-[10px] text-muted-foreground truncate md:text-xs">{event.courseName}</p>}
                   </div>
                   {event.url && (
                     <a href={event.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-muted-foreground hover:text-primary transition-colors">

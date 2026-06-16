@@ -35,7 +35,7 @@ export function TodoItem({ todo }: Props) {
   }
 
   return (
-    <div className={`flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-opacity ${isPending || todo.status === 'done' ? 'opacity-60' : ''}`}>
+    <div className={`flex items-start gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 md:px-4 md:py-3 transition-opacity ${isPending || todo.status === 'done' ? 'opacity-60' : ''}`}>
       <button
         onClick={cycleStatus}
         className={`mt-0.5 shrink-0 transition-colors ${

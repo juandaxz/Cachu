@@ -29,50 +29,50 @@ export function TodoFilters({ categories, currentView }: Props) {
   const status = searchParams.get('status')
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 md:space-y-3">
       {/* View toggle */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 md:gap-2">
         <button
           onClick={() => update('view', 'list')}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${currentView !== 'kanban' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
+          className={`flex items-center gap-1 rounded-lg px-2.5 py-1 md:px-3 md:py-1.5 text-xs md:text-sm font-medium transition-colors ${currentView === 'list' || (!['kanban','calendar'].includes(currentView)) ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
         >
-          <LayoutList className="h-4 w-4" />
+          <LayoutList className="h-3.5 w-3.5" />
           Lista
         </button>
         <button
           onClick={() => update('view', 'kanban')}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${currentView === 'kanban' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
+          className={`flex items-center gap-1 rounded-lg px-2.5 py-1 md:px-3 md:py-1.5 text-xs md:text-sm font-medium transition-colors ${currentView === 'kanban' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
         >
-          <Kanban className="h-4 w-4" />
+          <Kanban className="h-3.5 w-3.5" />
           Kanban
         </button>
         <button
           onClick={() => update('view', 'calendar')}
-          className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${currentView === 'calendar' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
+          className={`flex items-center gap-1 rounded-lg px-2.5 py-1 md:px-3 md:py-1.5 text-xs md:text-sm font-medium transition-colors ${currentView === 'calendar' ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
         >
-          <CalendarDays className="h-4 w-4" />
+          <CalendarDays className="h-3.5 w-3.5" />
           Calendario
         </button>
 
-        {currentView !== 'kanban' && currentView !== 'calendar' && (
+        {currentView === 'list' && (
           <button
             onClick={() => update('status', status === 'done' ? null : 'done')}
-            className={`ml-auto text-xs rounded-lg px-3 py-1.5 border transition-colors ${status === 'done' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
+            className={`ml-auto text-[10px] md:text-xs rounded-lg px-2 py-1 md:px-3 md:py-1.5 border transition-colors ${status === 'done' ? 'border-primary/50 bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`}
           >
-            Ver completadas
+            Completadas
           </button>
         )}
       </div>
 
-      {/* Filters — hidden in calendar view */}
-      {currentView !== 'calendar' && (
-        <div className="flex flex-wrap gap-2">
-          <span className="text-xs text-muted-foreground self-center">Urgencia:</span>
+      {/* Filters — hidden in calendar/kanban view */}
+      {currentView === 'list' && (
+        <div className="flex flex-wrap gap-1.5 md:gap-2">
+          <span className="text-[10px] md:text-xs text-muted-foreground self-center">Urgencia:</span>
           {(Object.entries(URGENCY_CONFIG) as [string, typeof URGENCY_CONFIG[keyof typeof URGENCY_CONFIG]][]).map(([key, cfg]) => (
             <button
               key={key}
               onClick={() => update('urgency', urgency === key ? null : key)}
-              className={`rounded-md border px-2 py-0.5 text-xs font-semibold transition-all ${urgency === key ? cfg.color : 'border-border text-muted-foreground hover:border-primary/30'}`}
+              className={`rounded-md border px-1.5 py-0.5 text-[10px] md:text-xs font-semibold transition-all ${urgency === key ? cfg.color : 'border-border text-muted-foreground hover:border-primary/30'}`}
             >
               {cfg.label}
             </button>
@@ -80,12 +80,12 @@ export function TodoFilters({ categories, currentView }: Props) {
 
           {categories.length > 0 && (
             <>
-              <span className="text-xs text-muted-foreground self-center ml-2">Categoría:</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground self-center ml-1 md:ml-2">Categoría:</span>
               {categories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => update('category', category === cat.id ? null : cat.id)}
-                  className={`rounded-md border px-2 py-0.5 text-xs font-medium transition-all ${
+                  className={`rounded-md border px-1.5 py-0.5 text-[10px] md:text-xs font-medium transition-all ${
                     category === cat.id
                       ? 'border-primary bg-primary/10 text-primary'
                       : 'border-border text-muted-foreground hover:border-primary/30'

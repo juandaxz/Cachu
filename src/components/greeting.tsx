@@ -7,5 +7,5 @@ export function Greeting() {
     h >= 12 && h < 19 ? 'Buenas tardes' :
     'Buenas noches'
 
-  return <h1 className="text-2xl font-bold text-foreground">{text} 👋</h1>
+  return <h1 className="text-xl md:text-2xl font-bold text-foreground">{text} 👋</h1>
 }

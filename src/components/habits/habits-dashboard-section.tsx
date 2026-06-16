@@ -14,9 +14,9 @@ export function HabitsDashboardSection({ habits }: Props) {
   const todayStr = today()
 
   return (
-    <section className="space-y-3">
+    <section className="space-y-2 md:space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-foreground">Habits</h2>
+        <h2 className="text-sm font-semibold text-foreground md:text-base">Hábitos</h2>
         <Link
           href="/habits"
           className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1"
@@ -25,7 +25,7 @@ export function HabitsDashboardSection({ habits }: Props) {
         </Link>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5 md:space-y-2">
         {habits.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4 text-center">Sin hábitos aún.</p>
         ) : (

@@ -136,7 +136,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page content */}
-        <div className="flex-1 p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 p-3 md:p-6 pb-20 md:pb-6 overflow-y-auto overflow-x-hidden">
           {children}
         </div>
 
