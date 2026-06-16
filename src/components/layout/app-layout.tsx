@@ -120,7 +120,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 min-h-screen flex flex-col">
+      <main className="flex-1 min-h-screen flex flex-col min-w-0 overflow-x-hidden">
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border">
           <span className="font-bold text-foreground">Balancepol</span>

@@ -26,7 +26,7 @@ export default async function DashboardPage() {
       const all = await fetchCalendarEvents(icalUrl)
       calendarEvents = upcomingEvents(all, 7)
     } catch {
-      // silently ignore calendar errors on home
+      // silently ignore
     }
   }
 
@@ -60,33 +60,34 @@ export default async function DashboardPage() {
     return (urgencyOrder[a.urgency] ?? 3) - (urgencyOrder[b.urgency] ?? 3)
   })
 
-  const dayLabel = format(new Date(), 'EEEE, MMMM d')
+  // Spanish date: "martes, 16 jun"
+  const dayLabel = format(new Date(), "EEEE, d MMM", { locale: es })
 
   const totalHabits = habits.length
   const checkedToday = habits.filter((h) => h.habit_checkins?.some((c: { date: string }) => c.date === todayStr)).length
   const pendingTodos = todos.filter((t) => t.status === 'pending' || t.status === 'in_progress').length
 
   return (
-    <div className="space-y-4 md:space-y-6 max-w-2xl mx-auto">
+    <div className="space-y-3 md:space-y-6 max-w-2xl mx-auto">
       {/* Header */}
-      <div>
-        <p className="text-muted-foreground text-xs md:text-sm capitalize">{dayLabel}</p>
+      <div className="space-y-0.5">
+        <p className="text-muted-foreground text-xs capitalize">{dayLabel}</p>
         <Greeting />
       </div>
 
-      {/* Quick stats */}
-      <div className="grid grid-cols-3 gap-2 md:gap-3">
-        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
-          <p className="text-xl md:text-2xl font-bold text-primary">{checkedToday}/{totalHabits}</p>
-          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Hábitos hoy</p>
+      {/* Quick stats — flex to avoid grid overflow on narrow screens */}
+      <div className="flex rounded-xl border border-border bg-card divide-x divide-border overflow-hidden">
+        <div className="flex-1 py-2.5 px-2 text-center min-w-0">
+          <p className="text-lg font-bold text-primary tabular-nums">{checkedToday}/{totalHabits}</p>
+          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Hábitos</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
-          <p className="text-xl md:text-2xl font-bold text-primary">{antiHabits.length}</p>
-          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Bajo control</p>
+        <div className="flex-1 py-2.5 px-2 text-center min-w-0">
+          <p className="text-lg font-bold text-primary tabular-nums">{antiHabits.length}</p>
+          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Control</p>
         </div>
-        <div className="rounded-xl border border-border bg-card p-2.5 md:p-3 text-center">
-          <p className="text-xl md:text-2xl font-bold text-primary">{pendingTodos}</p>
-          <p className="text-[10px] md:text-xs text-muted-foreground mt-0.5 leading-tight">Pendientes</p>
+        <div className="flex-1 py-2.5 px-2 text-center min-w-0">
+          <p className="text-lg font-bold text-primary tabular-nums">{pendingTodos}</p>
+          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Pendientes</p>
         </div>
       </div>
 
@@ -96,16 +97,16 @@ export default async function DashboardPage() {
         <HabitsDashboardSection habits={habits as any} />
       )}
 
-      {/* Anti-habits check-in */}
+      {/* Anti-habits */}
       {antiHabits.length > 0 && (
-        <section className="space-y-2 md:space-y-3">
+        <section className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground md:text-base">Rachas activas</h2>
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Rachas activas</h2>
             <Link href="/habits?tab=dejar" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {antiHabits.map((ah) => {
               const checkedSet = buildAntiCheckinSet(ah.anti_habit_checkins ?? [])
               const checkedToday = checkedSet.has(todayStr)
@@ -125,15 +126,15 @@ export default async function DashboardPage() {
       )}
 
       {/* Todos */}
-      {todos.length > 0 && (
-        <section className="space-y-2 md:space-y-3">
+      {todos.filter((t) => t.status !== 'done').length > 0 && (
+        <section className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground md:text-base">Tareas</h2>
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tareas</h2>
             <Link href="/todos" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-1.5 md:space-y-2">
+          <div className="space-y-1.5">
             {todos.filter((t) => t.status !== 'done').slice(0, 5).map((todo) => (
               <DashboardTodoItem key={todo.id} todo={todo} />
             ))}
@@ -143,37 +144,36 @@ export default async function DashboardPage() {
 
       {/* Calendar upcoming */}
       {calendarEvents.length > 0 && (
-        <section className="space-y-2 md:space-y-3">
+        <section className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-foreground md:text-base flex items-center gap-2">
-              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+              <CalendarDays className="h-3.5 w-3.5" />
               Próximas entregas
             </h2>
             <Link href="/todos?view=calendar" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
               Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="space-y-1.5 md:space-y-2">
-            {calendarEvents.slice(0, 5).map((event) => {
-              let dateLabel: string
-              if (isToday(event.start)) dateLabel = 'Hoy'
-              else if (isTomorrow(event.start)) dateLabel = 'Mañana'
-              else dateLabel = format(event.start, "EEE d MMM", { locale: es })
+          <div className="space-y-1.5">
+            {calendarEvents.slice(0, 4).map((event) => {
+              const dateLabel = isToday(event.start) ? 'Hoy'
+                : isTomorrow(event.start) ? 'Mañana'
+                : format(event.start, "EEE d", { locale: es })
               return (
-                <div key={event.uid} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 md:px-4 md:py-3">
-                  <div className="shrink-0 text-center min-w-[40px]">
-                    <p className="text-[10px] text-muted-foreground uppercase leading-none">{dateLabel}</p>
-                    <p className="text-xs font-semibold text-primary flex items-center gap-0.5 mt-0.5">
-                      <Clock className="h-2.5 w-2.5" />{format(event.start, 'HH:mm')}
+                <div key={event.uid} className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2">
+                  <div className="shrink-0 text-center w-10">
+                    <p className="text-[9px] text-muted-foreground uppercase leading-none">{dateLabel}</p>
+                    <p className="text-[10px] font-semibold text-primary flex items-center gap-0.5 mt-0.5 justify-center">
+                      <Clock className="h-2 w-2" />{format(event.start, 'HH:mm')}
                     </p>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-foreground truncate md:text-sm">{event.title}</p>
-                    {event.courseName && <p className="text-[10px] text-muted-foreground truncate md:text-xs">{event.courseName}</p>}
+                    <p className="text-xs font-medium text-foreground truncate">{event.title}</p>
+                    {event.courseName && <p className="text-[10px] text-muted-foreground truncate">{event.courseName}</p>}
                   </div>
                   {event.url && (
-                    <a href={event.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-muted-foreground hover:text-primary transition-colors">
-                      <ExternalLink className="h-3.5 w-3.5" />
+                    <a href={event.url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-muted-foreground hover:text-primary">
+                      <ExternalLink className="h-3 w-3" />
                     </a>
                   )}
                 </div>
@@ -185,8 +185,8 @@ export default async function DashboardPage() {
 
       {/* Empty state */}
       {habits.length === 0 && antiHabits.length === 0 && todos.length === 0 && (
-        <div className="text-center py-16 space-y-3">
-          <p className="text-muted-foreground">Nada por aquí. Empieza agregando hábitos o tareas.</p>
+        <div className="text-center py-12">
+          <p className="text-sm text-muted-foreground">Nada por aquí. Agrega hábitos o tareas.</p>
         </div>
       )}
     </div>
