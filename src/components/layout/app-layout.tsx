@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Target, ShieldOff, CheckSquare, BarChart2, CalendarDays, Settings, LogOut, Sun, Moon, Timer } from 'lucide-react'
+import { Home, Target, CheckSquare, BarChart2, Settings, LogOut, Sun, Moon, Timer } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -12,9 +12,7 @@ import { Toaster } from 'sonner'
 const NAV_ITEMS = [
   { href: '/', icon: Home, label: 'Inicio' },
   { href: '/habits', icon: Target, label: 'Hábitos' },
-  { href: '/anti-habits', icon: ShieldOff, label: 'Dejar' },
   { href: '/todos', icon: CheckSquare, label: 'Tareas' },
-  { href: '/calendar', icon: CalendarDays, label: 'Calendario' },
   { href: '/focus', icon: Timer, label: 'Focus' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
