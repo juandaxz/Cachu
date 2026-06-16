@@ -22,27 +22,24 @@ function WaterDrop({ count }: { count: number }) {
         </clipPath>
       </defs>
 
-      {/* Drop background (empty) */}
+      {/* Drop background */}
       <path
         d="M50 6 C50 6 10 52 10 78 A40 40 0 0 0 90 78 C90 52 50 6 50 6 Z"
         className="fill-sky-100 dark:fill-sky-950"
       />
-
       {/* Water fill */}
       <path
         d="M50 6 C50 6 10 52 10 78 A40 40 0 0 0 90 78 C90 52 50 6 50 6 Z"
         className="fill-sky-400 dark:fill-sky-500"
         clipPath="url(#water-clip)"
       />
-
-      {/* Drop outline */}
+      {/* Outline */}
       <path
         d="M50 6 C50 6 10 52 10 78 A40 40 0 0 0 90 78 C90 52 50 6 50 6 Z"
         fill="none"
         strokeWidth="2.5"
         className="stroke-sky-400 dark:stroke-sky-600"
       />
-
       {/* Shine */}
       <path
         d="M38 30 Q34 50 36 62"
@@ -51,8 +48,7 @@ function WaterDrop({ count }: { count: number }) {
         strokeLinecap="round"
         className="stroke-white/40"
       />
-
-      {/* Count label inside */}
+      {/* Count */}
       {count > 0 && (
         <text
           x="50" y="82"
@@ -81,7 +77,7 @@ export function WaterTracker({ initialCount }: { initialCount: number }) {
     startTransition(() => incrementWater())
   }
 
-  function remove() {
+  function undo() {
     if (count <= 0) return
     setCount(c => c - 1)
     startTransition(() => decrementWater())
@@ -105,28 +101,23 @@ export function WaterTracker({ initialCount }: { initialCount: number }) {
         )}
       </div>
 
-      <div className="flex items-center gap-2">
-        <button
-          onClick={remove}
-          disabled={count <= 0 || isPending}
-          className="w-9 h-9 rounded-xl border border-border text-muted-foreground hover:bg-secondary transition-colors text-lg font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          −
-        </button>
+      <div className="flex flex-col items-center gap-2">
         <button
           onClick={add}
           disabled={done || isPending}
-          className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-8 py-3 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           💧 Tomé agua
         </button>
-        <button
-          onClick={add}
-          disabled={done || isPending}
-          className="w-9 h-9 rounded-xl border border-border text-muted-foreground hover:bg-secondary transition-colors text-lg font-bold disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          +
-        </button>
+        {count > 0 && (
+          <button
+            onClick={undo}
+            disabled={isPending}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+          >
+            Deshacer
+          </button>
+        )}
       </div>
 
       {/* Progress dots */}

@@ -8,6 +8,7 @@ import { DashboardTodoItem } from '@/components/todos/dashboard-todo-item'
 import { fetchCalendarEvents, upcomingEvents } from '@/lib/ical'
 import Link from 'next/link'
 import { ArrowRight, CalendarDays, ExternalLink, Clock } from 'lucide-react'
+import { Greeting } from '@/components/greeting'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -69,23 +70,23 @@ export default async function DashboardPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header */}
       <div>
-        <p className="text-muted-foreground text-sm">{dayLabel}</p>
-        <h1 className="text-2xl font-bold text-foreground">Good morning</h1>
+        <p className="text-muted-foreground text-sm capitalize">{dayLabel}</p>
+        <Greeting />
       </div>
 
       {/* Quick stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-primary">{checkedToday}/{totalHabits}</p>
-          <p className="text-xs text-muted-foreground mt-1">Habits today</p>
+          <p className="text-xs text-muted-foreground mt-1">Hábitos hoy</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-primary">{antiHabits.length}</p>
-          <p className="text-xs text-muted-foreground mt-1">In control</p>
+          <p className="text-xs text-muted-foreground mt-1">Bajo control</p>
         </div>
         <div className="rounded-xl border border-border bg-card p-3 text-center">
           <p className="text-2xl font-bold text-primary">{pendingTodos}</p>
-          <p className="text-xs text-muted-foreground mt-1">Pending tasks</p>
+          <p className="text-xs text-muted-foreground mt-1">Tareas pendientes</p>
         </div>
       </div>
 
@@ -99,9 +100,9 @@ export default async function DashboardPage() {
       {antiHabits.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Active streaks</h2>
+            <h2 className="font-semibold text-foreground">Rachas activas</h2>
             <Link href="/anti-habits" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              See all <ArrowRight className="h-3 w-3" />
+              Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="space-y-2">
@@ -127,9 +128,9 @@ export default async function DashboardPage() {
       {todos.length > 0 && (
         <section className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-foreground">Tasks</h2>
+            <h2 className="font-semibold text-foreground">Tareas</h2>
             <Link href="/todos" className="text-xs text-muted-foreground hover:text-primary flex items-center gap-1">
-              See all <ArrowRight className="h-3 w-3" />
+              Ver todo <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
           <div className="space-y-2">
@@ -185,7 +186,7 @@ export default async function DashboardPage() {
       {/* Empty state */}
       {habits.length === 0 && antiHabits.length === 0 && todos.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-muted-foreground">Nothing here. Start by adding habits or tasks.</p>
+          <p className="text-muted-foreground">Nada por aquí. Empieza agregando hábitos o tareas.</p>
         </div>
       )}
     </div>

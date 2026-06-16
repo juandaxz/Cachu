@@ -3,6 +3,8 @@
 import { useState, useTransition } from 'react'
 import { checkinHabit, uncheckinHabit, deleteHabit, archiveHabit } from '@/app/actions/habits'
 import { Flame, Trash2, Archive, Plus, Check } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { toast } from 'sonner'
 import type { Habit } from '@/lib/types'
 
 interface Props {
@@ -21,6 +23,20 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
     startTransition(async () => {
       if (checkedToday) await uncheckinHabit(habit.id)
       else await checkinHabit(habit.id, habit.type === 'count' ? count : 1)
+    })
+  }
+
+  function handleDelete() {
+    startTransition(async () => {
+      await deleteHabit(habit.id)
+      toast.success('Hábito eliminado')
+    })
+  }
+
+  function handleArchive() {
+    startTransition(async () => {
+      await archiveHabit(habit.id, true)
+      toast.success('Hábito archivado')
     })
   }
 
@@ -46,10 +62,20 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
 
       {/* Count controls */}
       {habit.type === 'count' && !checkedToday && (
-        <div className="flex items-center gap-1">
-          <button onClick={() => setCount(Math.max(1, count - 1))} className="h-6 w-6 rounded-md bg-secondary text-foreground text-xs font-bold">−</button>
-          <span className="text-sm w-5 text-center text-foreground font-medium">{count}</span>
-          <button onClick={() => setCount(count + 1)} className="h-6 w-6 rounded-md bg-secondary text-foreground text-xs font-bold">+</button>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setCount(Math.max(1, count - 1))}
+            className="h-8 w-8 rounded-lg bg-secondary text-foreground text-sm font-bold hover:bg-secondary/70 transition-colors"
+          >
+            −
+          </button>
+          <span className="text-sm w-6 text-center text-foreground font-medium tabular-nums">{count}</span>
+          <button
+            onClick={() => setCount(count + 1)}
+            className="h-8 w-8 rounded-lg bg-secondary text-foreground text-sm font-bold hover:bg-secondary/70 transition-colors"
+          >
+            +
+          </button>
         </div>
       )}
 
@@ -72,12 +98,26 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
 
       {/* Actions */}
       <div className="flex items-center gap-1">
-        <button onClick={() => startTransition(() => archiveHabit(habit.id, true))} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
-          <Archive className="h-4 w-4" />
-        </button>
-        <button onClick={() => { if (confirm('¿Eliminar este hábito?')) startTransition(() => deleteHabit(habit.id)) }} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
-          <Trash2 className="h-4 w-4" />
-        </button>
+        <ConfirmDialog
+          title="¿Archivar hábito?"
+          description="El hábito dejará de aparecer pero se conservará el historial."
+          onConfirm={handleArchive}
+          trigger={
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+              <Archive className="h-4 w-4" />
+            </button>
+          }
+        />
+        <ConfirmDialog
+          title="¿Eliminar hábito?"
+          description="Se eliminará el hábito y todo su historial. Esta acción no se puede deshacer."
+          onConfirm={handleDelete}
+          trigger={
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          }
+        />
       </div>
     </div>
   )

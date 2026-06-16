@@ -36,18 +36,18 @@ export default async function StatsPage() {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Statistics</h1>
-        <p className="text-sm text-muted-foreground">Your progress over the past year</p>
+        <h1 className="text-2xl font-bold text-foreground">Estadísticas</h1>
+        <p className="text-sm text-muted-foreground">Tu progreso en el último año</p>
       </div>
 
       {habits.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Overall habit activity</h2>
+          <h2 className="text-lg font-semibold text-foreground">Actividad general de hábitos</h2>
           <div className="rounded-xl border border-border bg-card p-4">
             <Heatmap
               valueMap={allDatesMap}
               maxValue={Math.max(habits.length, 1)}
-              label={`Intensity: how many of your ${habits.length} habits you completed that day`}
+              label={`Intensidad: cuántos de tus ${habits.length} hábitos completaste ese día`}
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -65,7 +65,7 @@ export default async function StatsPage() {
                       <p className="text-sm font-medium text-foreground">{habit.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span className="text-primary flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
-                        <span>· {total} total days</span>
+                        <span>· {total} días en total</span>
                       </div>
                     </div>
                   </div>
@@ -79,7 +79,7 @@ export default async function StatsPage() {
 
       {antiHabits.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-lg font-semibold text-foreground">Quit habit streaks</h2>
+          <h2 className="text-lg font-semibold text-foreground">Rachas de hábitos a dejar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {antiHabits.map((ah) => {
               const checkinMap: Record<string, number> = {}
@@ -91,16 +91,18 @@ export default async function StatsPage() {
               return (
                 <div key={ah.id} className="rounded-xl border border-border bg-card p-3 space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-md shrink-0 bg-secondary" />
+                    <div className="h-6 w-6 rounded-md shrink-0 bg-secondary flex items-center justify-center text-sm">
+                      {ah.emoji || ah.name.charAt(0).toUpperCase()}
+                    </div>
                     <div>
                       <p className="text-sm font-medium text-foreground">{ah.name}</p>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <span className="text-primary flex items-center gap-1"><Flame className="h-3 w-3" />{streak} streak</span>
-                        <span>· {totalCheckins} check-ins</span>
+                        <span>· {totalCheckins} días marcados</span>
                       </div>
                     </div>
                   </div>
-                  <Heatmap valueMap={checkinMap} label="Clean days" compact />
+                  <Heatmap valueMap={checkinMap} label="Días limpios" compact />
                 </div>
               )
             })}
@@ -110,7 +112,7 @@ export default async function StatsPage() {
 
       {habits.length === 0 && antiHabits.length === 0 && (
         <div className="text-center py-16 space-y-3">
-          <p className="text-muted-foreground">No data yet. Add habits and start checking in.</p>
+          <p className="text-muted-foreground">Sin datos aún. Agrega hábitos y empieza a marcarlos.</p>
         </div>
       )}
     </div>

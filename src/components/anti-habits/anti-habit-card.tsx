@@ -5,6 +5,8 @@ import { checkinAntiHabit, uncheckinAntiHabit, deleteAntiHabit } from '@/app/act
 import { TemptationModal } from './temptation-modal'
 import { Heatmap } from '@/components/heatmap'
 import { Flame, ShieldCheck, Trash2, ChevronDown, ChevronUp } from 'lucide-react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { toast } from 'sonner'
 import type { AntiHabit, AntiHabitCheckin } from '@/lib/types'
 import { differenceInDays, parseISO } from 'date-fns'
 
@@ -30,6 +32,13 @@ export function AntiHabitCard({ antiHabit, checkins, streak, checkedToday }: Pro
     })
   }
 
+  function handleDelete() {
+    startTransition(async () => {
+      await deleteAntiHabit(antiHabit.id)
+      toast.success('Hábito eliminado')
+    })
+  }
+
   return (
     <div className={`bg-card border border-border rounded-xl transition-opacity ${isPending ? 'opacity-60' : ''}`}>
       <div className="p-4 space-y-3">
@@ -48,12 +57,22 @@ export function AntiHabitCard({ antiHabit, checkins, streak, checkedToday }: Pro
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <button onClick={() => setExpanded(!expanded)} className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors">
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="p-1.5 rounded-lg text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+            >
               {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </button>
-            <button onClick={() => { if (confirm('¿Eliminar?')) startTransition(() => deleteAntiHabit(antiHabit.id)) }} className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
-              <Trash2 className="h-4 w-4" />
-            </button>
+            <ConfirmDialog
+              title="¿Eliminar hábito?"
+              description="Se eliminará el hábito y toda su racha. Esta acción no se puede deshacer."
+              onConfirm={handleDelete}
+              trigger={
+                <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              }
+            />
           </div>
         </div>
 
@@ -62,7 +81,7 @@ export function AntiHabitCard({ antiHabit, checkins, streak, checkedToday }: Pro
           {[
             { value: streak, label: 'Racha actual' },
             { value: totalDays, label: 'Días totales' },
-            { value: checkins.length, label: 'Check-ins' },
+            { value: checkins.length, label: 'Días marcados' },
           ].map(({ value, label }) => (
             <div key={label} className="rounded-lg bg-secondary p-2 text-center">
               <p className="text-base font-bold text-foreground">{value}</p>
@@ -83,7 +102,7 @@ export function AntiHabitCard({ antiHabit, checkins, streak, checkedToday }: Pro
             }`}
           >
             <ShieldCheck className="h-4 w-4" />
-            {checkedToday ? 'Marcado limpio hoy' : 'Marcar hoy como limpio'}
+            {checkedToday ? 'Marcado limpio hoy ✓' : 'Marcar hoy como limpio'}
           </button>
           <TemptationModal antiHabit={antiHabit} streak={streak} />
         </div>

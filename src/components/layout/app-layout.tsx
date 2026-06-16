@@ -7,23 +7,24 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { Toaster } from 'sonner'
 
 const NAV_ITEMS = [
-  { href: '/', icon: Home, label: 'Home' },
-  { href: '/habits', icon: Target, label: 'Habits' },
-  { href: '/anti-habits', icon: ShieldOff, label: 'Quit' },
-  { href: '/todos', icon: CheckSquare, label: 'Tasks' },
+  { href: '/', icon: Home, label: 'Inicio' },
+  { href: '/habits', icon: Target, label: 'Hábitos' },
+  { href: '/anti-habits', icon: ShieldOff, label: 'Dejar' },
+  { href: '/todos', icon: CheckSquare, label: 'Tareas' },
   { href: '/calendar', icon: CalendarDays, label: 'Calendario' },
   { href: '/focus', icon: Timer, label: 'Focus' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
 
 const BOTTOM_NAV_ITEMS = [
-  { href: '/', icon: Home, label: 'Home' },
-  { href: '/habits', icon: Target, label: 'Habits' },
-  { href: '/todos', icon: CheckSquare, label: 'Tasks' },
-  { href: '/calendar', icon: CalendarDays, label: 'Cal' },
+  { href: '/', icon: Home, label: 'Inicio' },
+  { href: '/habits', icon: Target, label: 'Hábitos' },
+  { href: '/todos', icon: CheckSquare, label: 'Tareas' },
   { href: '/focus', icon: Timer, label: 'Focus' },
+  { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
 
 function ThemeToggle() {
@@ -69,6 +70,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background flex">
+      <Toaster richColors position="top-center" />
+
       {/* Sidebar (desktop) */}
       <aside className="hidden md:flex flex-col w-56 border-r border-border p-4 gap-1 shrink-0">
         <div className="flex items-center gap-2 px-2 py-3 mb-4">
@@ -122,9 +125,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 min-h-screen flex flex-col">
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-foreground">Balancepol</span>
-          </div>
+          <span className="font-bold text-foreground">Balancepol</span>
           <div className="flex items-center gap-1">
             <ThemeToggle />
             <button
@@ -151,7 +152,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'flex flex-1 flex-col items-center gap-1 py-2 text-xs font-medium transition-colors',
+                    'flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-medium transition-colors',
                     active ? 'text-primary' : 'text-muted-foreground'
                   )}
                 >

@@ -5,6 +5,8 @@ import { updateTodoStatus, deleteTodo } from '@/app/actions/todos'
 import { Trash2, Circle, Clock, CheckCircle2 } from 'lucide-react'
 import { format, parseISO, isPast, isToday } from 'date-fns'
 import { URGENCY_CONFIG } from '@/lib/utils'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { toast } from 'sonner'
 import type { TodoWithCategory, TodoStatus } from '@/lib/types'
 
 interface Props {
@@ -25,6 +27,13 @@ export function TodoItem({ todo }: Props) {
     startTransition(() => updateTodoStatus(todo.id, next as TodoStatus))
   }
 
+  function handleDelete() {
+    startTransition(async () => {
+      await deleteTodo(todo.id)
+      toast.success('Tarea eliminada')
+    })
+  }
+
   return (
     <div className={`flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3 transition-opacity ${isPending || todo.status === 'done' ? 'opacity-60' : ''}`}>
       <button
@@ -32,6 +41,7 @@ export function TodoItem({ todo }: Props) {
         className={`mt-0.5 shrink-0 transition-colors ${
           todo.status === 'done' ? 'text-primary' : todo.status === 'in_progress' ? 'text-primary/70' : 'text-muted-foreground hover:text-primary'
         }`}
+        title={todo.status === 'pending' ? 'Marcar en progreso' : todo.status === 'in_progress' ? 'Marcar como hecho' : 'Volver a pendiente'}
       >
         <StatusIcon className="h-5 w-5" />
       </button>
@@ -60,12 +70,16 @@ export function TodoItem({ todo }: Props) {
         </div>
       </div>
 
-      <button
-        onClick={() => { if (confirm('¿Eliminar esta tarea?')) startTransition(() => deleteTodo(todo.id)) }}
-        className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors shrink-0"
-      >
-        <Trash2 className="h-4 w-4" />
-      </button>
+      <ConfirmDialog
+        title="¿Eliminar tarea?"
+        description="Esta acción no se puede deshacer."
+        onConfirm={handleDelete}
+        trigger={
+          <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors shrink-0">
+            <Trash2 className="h-4 w-4" />
+          </button>
+        }
+      />
     </div>
   )
 }
