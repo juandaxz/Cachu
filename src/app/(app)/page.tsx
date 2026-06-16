@@ -60,8 +60,13 @@ export default async function DashboardPage() {
     return (urgencyOrder[a.urgency] ?? 3) - (urgencyOrder[b.urgency] ?? 3)
   })
 
-  // Spanish date: "martes, 16 jun"
-  const dayLabel = format(new Date(), "EEEE, d MMM", { locale: es })
+  // Spanish date in Ecuador timezone: "martes, 16 jun"
+  const dayLabel = new Intl.DateTimeFormat('es', {
+    timeZone: 'America/Guayaquil',
+    weekday: 'long',
+    day: 'numeric',
+    month: 'short',
+  }).format(new Date())
 
   const totalHabits = habits.length
   const checkedToday = habits.filter((h) => h.habit_checkins?.some((c: { date: string }) => c.date === todayStr)).length

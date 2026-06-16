@@ -13,7 +13,14 @@ export function formatDate(date: Date | string): string {
 }
 
 export function today(): string {
-  return format(new Date(), 'yyyy-MM-dd')
+  const parts = new Intl.DateTimeFormat('en', {
+    timeZone: 'America/Guayaquil',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date())
+  const get = (t: string) => parts.find(p => p.type === t)?.value ?? '00'
+  return `${get('year')}-${get('month')}-${get('day')}`
 }
 
 // Build a map of date -> value for the last 365 days
