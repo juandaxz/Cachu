@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Target, ShieldOff, CheckSquare, BarChart2, CalendarDays, Settings, LogOut, Sun, Moon } from 'lucide-react'
+import { Home, Target, ShieldOff, CheckSquare, BarChart2, CalendarDays, Settings, LogOut, Sun, Moon, Timer } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { href: '/anti-habits', icon: ShieldOff, label: 'Quit' },
   { href: '/todos', icon: CheckSquare, label: 'Tasks' },
   { href: '/calendar', icon: CalendarDays, label: 'Calendario' },
+  { href: '/focus', icon: Timer, label: 'Focus' },
   { href: '/stats', icon: BarChart2, label: 'Stats' },
 ]
 
@@ -22,7 +23,7 @@ const BOTTOM_NAV_ITEMS = [
   { href: '/habits', icon: Target, label: 'Habits' },
   { href: '/todos', icon: CheckSquare, label: 'Tasks' },
   { href: '/calendar', icon: CalendarDays, label: 'Cal' },
-  { href: '/stats', icon: BarChart2, label: 'Stats' },
+  { href: '/focus', icon: Timer, label: 'Focus' },
 ]
 
 function ThemeToggle() {
