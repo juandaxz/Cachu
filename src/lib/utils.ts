@@ -148,10 +148,10 @@ export function buildHistoryGrid(valueMap: Record<string, number>, weekCount = 1
 
 // Get urgency label and color
 export const URGENCY_CONFIG = {
-  low: { label: 'Low', color: 'bg-secondary text-muted-foreground border-border' },
-  medium: { label: 'Medium', color: 'bg-primary/10 text-primary border-primary/20' },
-  high: { label: 'High', color: 'bg-primary/20 text-primary border-primary/30' },
-  risk: { label: 'RISK', color: 'bg-destructive/10 text-destructive border-destructive/30' },
+  low: { label: 'Baja', color: 'bg-secondary text-muted-foreground border-border' },
+  medium: { label: 'Media', color: 'bg-primary/10 text-primary border-primary/20' },
+  high: { label: 'Alta', color: 'bg-primary/20 text-primary border-primary/30' },
+  risk: { label: 'RIESGO', color: 'bg-destructive/10 text-destructive border-destructive/30' },
 } as const
 
 export const STATUS_CONFIG = {
@@ -161,16 +161,20 @@ export const STATUS_CONFIG = {
 } as const
 
 export const MOTIVATIONAL_MESSAGES = [
-  'You can do this. Don\'t give in now.',
-  'You are stronger than this urge.',
-  'This moment will pass. Breathe deeply.',
-  'Remember why you started.',
-  'Go for a walk, drink water, count to 10.',
-  'Regret lasts longer than the pleasure.',
-  'Every day you resist gets easier.',
-  'Call someone you trust.',
-  'Don\'t let down who you could become.',
+  'Puedes hacerlo. No te rindas ahora.',
+  'Eres más fuerte que este impulso.',
+  'Este momento pasará. Respira profundo.',
+  'Recuerda por qué empezaste.',
+  'Sal a caminar, toma agua, cuenta hasta 10.',
+  'El arrepentimiento dura más que el placer.',
+  'Cada día que resistes se vuelve más fácil.',
+  'Llama a alguien de confianza.',
+  'No decepciones a la persona en que te puedes convertir.',
 ]
+
+export function pluralize(n: number, singular: string, plural: string): string {
+  return n === 1 ? singular : plural
+}
 
 export const DEFAULT_CATEGORIES = [
   { name: 'University', color: '#6366f1' },

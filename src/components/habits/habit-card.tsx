@@ -2,9 +2,11 @@
 
 import { useState, useTransition } from 'react'
 import { checkinHabit, uncheckinHabit, deleteHabit, archiveHabit } from '@/app/actions/habits'
-import { Flame, Trash2, Archive, Plus, Check } from 'lucide-react'
+import { Flame, Trash2, Archive, Plus, Check, Pencil } from 'lucide-react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { HabitForm } from '@/components/habits/habit-form'
 import { toast } from 'sonner'
+import { pluralize } from '@/lib/utils'
 import type { Habit } from '@/lib/types'
 
 interface Props {
@@ -49,13 +51,14 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className={`font-medium text-foreground text-sm ${checkedToday ? 'line-through text-muted-foreground' : ''}`}>
+        <p className={`font-medium text-sm ${checkedToday ? 'text-primary' : 'text-foreground'}`}>
           {habit.name}
+          {checkedToday && <span className="ml-1.5 text-xs">✓</span>}
         </p>
         {streak > 0 && (
           <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
             <Flame className="h-3 w-3 text-primary" />
-            {streak} días seguidos
+            {streak} {pluralize(streak, 'día', 'días')} seguidos
           </p>
         )}
       </div>
@@ -98,12 +101,17 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
 
       {/* Actions */}
       <div className="flex items-center gap-1">
+        <HabitForm mode="edit" habit={habit} trigger={
+          <button className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors" title="Editar">
+            <Pencil className="h-4 w-4" />
+          </button>
+        } />
         <ConfirmDialog
           title="¿Archivar hábito?"
           description="El hábito dejará de aparecer pero se conservará el historial."
           onConfirm={handleArchive}
           trigger={
-            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors">
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition-colors" title="Archivar">
               <Archive className="h-4 w-4" />
             </button>
           }
@@ -113,7 +121,7 @@ export function HabitCard({ habit, checkinMap, streak, checkedToday, todayValue 
           description="Se eliminará el hábito y todo su historial. Esta acción no se puede deshacer."
           onConfirm={handleDelete}
           trigger={
-            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors">
+            <button className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive transition-colors" title="Eliminar">
               <Trash2 className="h-4 w-4" />
             </button>
           }

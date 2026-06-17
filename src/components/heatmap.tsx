@@ -99,11 +99,11 @@ export function Heatmap({ valueMap, maxValue, label, compact = false, history = 
 
       {showLabels && (
         <div className="flex items-center gap-1 justify-end pt-0.5">
-          <span className="text-[10px] text-muted-foreground">Less</span>
+          <span className="text-[10px] text-muted-foreground">Menos</span>
           {INTENSITY_COLORS.map((c, i) => (
             <div key={i} className={`h-[10px] w-[10px] rounded-[2px] ${c}`} />
           ))}
-          <span className="text-[10px] text-muted-foreground">More</span>
+          <span className="text-[10px] text-muted-foreground">Más</span>
         </div>
       )}
     </div>

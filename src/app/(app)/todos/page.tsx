@@ -123,7 +123,7 @@ export default async function TodosPage({ searchParams }: { searchParams: Promis
         )}
       </div>
 
-      <Suspense>
+      <Suspense fallback={null}>
         <TodoFilters categories={categories} currentView={view} />
       </Suspense>
 
@@ -144,7 +144,7 @@ export default async function TodosPage({ searchParams }: { searchParams: Promis
         <TodoKanban todos={todos} />
       ) : (
         <div className="space-y-2">
-          {todos.map((todo) => <TodoItem key={todo.id} todo={todo} />)}
+          {todos.map((todo) => <TodoItem key={todo.id} todo={todo} categories={categories} />)}
         </div>
       )}
     </div>

@@ -5,7 +5,7 @@ import { es } from 'date-fns/locale'
 import { HabitsDashboardSection } from '@/components/habits/habits-dashboard-section'
 import { DashboardAntiHabitCard } from '@/components/anti-habits/dashboard-anti-habit-card'
 import { DashboardTodoItem } from '@/components/todos/dashboard-todo-item'
-import { fetchCalendarEvents, upcomingEvents } from '@/lib/ical'
+import { fetchCalendarEvents, upcomingEvents, formatEventTime } from '@/lib/ical'
 import Link from 'next/link'
 import { ArrowRight, CalendarDays, ExternalLink, Clock } from 'lucide-react'
 import { Greeting } from '@/components/greeting'
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex-1 py-2.5 px-2 text-center min-w-0">
           <p className="text-lg font-bold text-primary tabular-nums">{antiHabits.length}</p>
-          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Control</p>
+          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">Quit habits</p>
         </div>
         <div className="flex-1 py-2.5 px-2 text-center min-w-0">
           <p className="text-lg font-bold text-primary tabular-nums">{pendingTodos}</p>
@@ -168,9 +168,11 @@ export default async function DashboardPage() {
                 <div key={event.uid} className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2">
                   <div className="shrink-0 text-center w-10">
                     <p className="text-[9px] text-muted-foreground uppercase leading-none">{dateLabel}</p>
-                    <p className="text-[10px] font-semibold text-primary flex items-center gap-0.5 mt-0.5 justify-center">
-                      <Clock className="h-2 w-2" />{format(event.start, 'HH:mm')}
-                    </p>
+                    {formatEventTime(event.start) && (
+                      <p className="text-[10px] font-semibold text-primary flex items-center gap-0.5 mt-0.5 justify-center">
+                        <Clock className="h-2 w-2" />{formatEventTime(event.start)}
+                      </p>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-foreground truncate">{event.title}</p>

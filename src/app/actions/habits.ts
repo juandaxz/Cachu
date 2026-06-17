@@ -61,6 +61,25 @@ export async function checkinHabit(habitId: string, value: number) {
   return { success: true }
 }
 
+export async function updateHabit(id: string, formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'No autenticado' }
+
+  const name = formData.get('name') as string
+  const emoji = (formData.get('emoji') as string) || '✅'
+  const type = (formData.get('type') as HabitType) || 'boolean'
+
+  const { error } = await supabase.from('habits')
+    .update({ name, emoji, type })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { error: error.message }
+  revalidatePath('/', 'layout')
+  return { success: true }
+}
+
 export async function uncheckinHabit(habitId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

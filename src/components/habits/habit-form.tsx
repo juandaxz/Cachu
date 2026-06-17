@@ -1,20 +1,35 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { createHabit } from '@/app/actions/habits'
+import { createHabit, updateHabit } from '@/app/actions/habits'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Plus } from 'lucide-react'
+import type { Habit } from '@/lib/types'
 
 const EMOJIS = ['🏃', '🏋️', '📚', '💧', '🧘', '🎯', '💤', '🥗', '🎵', '✍️', '🧠', '🚴', '🌅', '🍎', '🧹', '🌱', '🏊', '🎨', '🤸', '💊']
 
-export function HabitForm() {
+interface CreateProps {
+  mode?: 'create'
+  habit?: never
+  trigger?: never
+}
+
+interface EditProps {
+  mode: 'edit'
+  habit: Habit
+  trigger: React.ReactNode
+}
+
+type Props = CreateProps | EditProps
+
+export function HabitForm({ mode = 'create', habit, trigger }: Props) {
   const [open, setOpen] = useState(false)
-  const [emoji, setEmoji] = useState(EMOJIS[0])
-  const [type, setType] = useState('boolean')
+  const [emoji, setEmoji] = useState(habit?.emoji ?? EMOJIS[0])
+  const [type, setType] = useState(habit?.type ?? 'boolean')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
 
@@ -26,7 +41,10 @@ export function HabitForm() {
     formData.set('color', '#1e3a5f')
 
     startTransition(async () => {
-      const result = await createHabit(formData)
+      const result = mode === 'edit' && habit
+        ? await updateHabit(habit.id, formData)
+        : await createHabit(formData)
+
       if (result?.error) {
         setError(result.error)
       } else {
@@ -39,19 +57,21 @@ export function HabitForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="h-4 w-4" />
-          Nuevo hábito
-        </Button>
+        {trigger ?? (
+          <Button size="sm">
+            <Plus className="h-4 w-4" />
+            Nuevo hábito
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nuevo hábito</DialogTitle>
+          <DialogTitle>{mode === 'edit' ? 'Editar hábito' : 'Nuevo hábito'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Nombre</Label>
-            <Input id="name" name="name" placeholder="ej. Ejercicio diario" required />
+            <Input id="name" name="name" placeholder="ej. Ejercicio diario" defaultValue={habit?.name} required />
           </div>
 
           <div className="space-y-2">
@@ -90,7 +110,7 @@ export function HabitForm() {
               Cancelar
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Guardando...' : 'Crear hábito'}
+              {isPending ? 'Guardando...' : mode === 'edit' ? 'Guardar cambios' : 'Crear hábito'}
             </Button>
           </div>
         </form>

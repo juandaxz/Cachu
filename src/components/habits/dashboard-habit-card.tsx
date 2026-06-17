@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { checkinHabit, uncheckinHabit } from '@/app/actions/habits'
 import { Flame, Check, Plus } from 'lucide-react'
+import { pluralize } from '@/lib/utils'
 import type { Habit } from '@/lib/types'
 
 interface Props {
@@ -33,12 +34,12 @@ export function DashboardHabitCard({ habit, checkedToday: initialChecked, todayV
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-medium text-foreground leading-tight ${checked ? 'line-through text-muted-foreground' : ''}`}>
-          {habit.name}
+        <p className={`text-sm font-medium leading-tight ${checked ? 'text-primary' : 'text-foreground'}`}>
+          {habit.name}{checked && <span className="ml-1 text-xs">✓</span>}
         </p>
         {streak > 0 && (
           <p className="text-[10px] text-muted-foreground flex items-center gap-1 mt-0.5">
-            <Flame className="h-2.5 w-2.5 text-primary" /> {streak} días
+            <Flame className="h-2.5 w-2.5 text-primary" /> {streak} {pluralize(streak, 'día', 'días')}
           </p>
         )}
       </div>

@@ -1,42 +1,65 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { createTodo } from '@/app/actions/todos'
+import { createTodo, updateTodo } from '@/app/actions/todos'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Plus } from 'lucide-react'
-import type { TodoCategory } from '@/lib/types'
+import { Plus, Pencil } from 'lucide-react'
+import { format } from 'date-fns'
+import type { TodoCategory, TodoWithCategory } from '@/lib/types'
 
-interface Props {
+interface CreateProps {
   categories: TodoCategory[]
+  mode?: 'create'
+  todo?: never
+  trigger?: never
 }
 
-export function TodoForm({ categories }: Props) {
+interface EditProps {
+  categories: TodoCategory[]
+  mode: 'edit'
+  todo: TodoWithCategory
+  trigger: React.ReactNode
+}
+
+type Props = CreateProps | EditProps
+
+export function TodoForm({ categories, mode = 'create', todo, trigger }: Props) {
   const [open, setOpen] = useState(false)
-  const [urgency, setUrgency] = useState('medium')
-  const [categoryId, setCategoryId] = useState('none')
+  const [urgency, setUrgency] = useState(todo?.urgency ?? 'medium')
+  const [categoryId, setCategoryId] = useState(todo?.category_id ?? 'none')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
+
+  const defaultDeadline = todo?.deadline
+    ? format(new Date(todo.deadline), "yyyy-MM-dd'T'HH:mm")
+    : ''
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     formData.set('urgency', urgency)
     if (categoryId !== 'none') formData.set('category_id', categoryId)
+    else formData.delete('category_id')
 
     startTransition(async () => {
-      const result = await createTodo(formData)
+      const result = mode === 'edit' && todo
+        ? await updateTodo(todo.id, formData)
+        : await createTodo(formData)
+
       if (result?.error) {
         setError(result.error)
       } else {
         setOpen(false)
         setError('')
-        setUrgency('medium')
-        setCategoryId('none')
+        if (mode === 'create') {
+          setUrgency('medium')
+          setCategoryId('none')
+        }
       }
     })
   }
@@ -44,50 +67,52 @@ export function TodoForm({ categories }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="h-4 w-4" />
-          New task
-        </Button>
+        {trigger ?? (
+          <Button size="sm">
+            <Plus className="h-4 w-4" />
+            Nueva tarea
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New task</DialogTitle>
+          <DialogTitle>{mode === 'edit' ? 'Editar tarea' : 'Nueva tarea'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" name="title" placeholder="What do you need to do?" required />
+            <Label htmlFor="title">Título</Label>
+            <Input id="title" name="title" placeholder="¿Qué necesitas hacer?" defaultValue={todo?.title} required />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (optional)</Label>
-            <Textarea id="description" name="description" placeholder="Details..." rows={2} />
+            <Label htmlFor="description">Descripción (opcional)</Label>
+            <Textarea id="description" name="description" placeholder="Detalles..." rows={2} defaultValue={todo?.description ?? ''} />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label>Urgency</Label>
+              <Label>Urgencia</Label>
               <Select value={urgency} onValueChange={setUrgency}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="risk">RISK</SelectItem>
+                  <SelectItem value="low">Baja</SelectItem>
+                  <SelectItem value="medium">Media</SelectItem>
+                  <SelectItem value="high">Alta</SelectItem>
+                  <SelectItem value="risk">RIESGO</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label>Category</Label>
+              <Label>Categoría</Label>
               <Select value={categoryId} onValueChange={setCategoryId}>
                 <SelectTrigger>
-                  <SelectValue placeholder="No category" />
+                  <SelectValue placeholder="Sin categoría" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">No category</SelectItem>
+                  <SelectItem value="none">Sin categoría</SelectItem>
                   {categories.map((cat) => (
                     <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                   ))}
@@ -97,18 +122,18 @@ export function TodoForm({ categories }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deadline">Deadline (optional)</Label>
-            <Input id="deadline" name="deadline" type="datetime-local" />
+            <Label htmlFor="deadline">Fecha límite (opcional)</Label>
+            <Input id="deadline" name="deadline" type="datetime-local" defaultValue={defaultDeadline} />
           </div>
 
           {error && <p className="text-sm text-destructive">{error}</p>}
 
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
             <Button type="submit" className="flex-1" disabled={isPending}>
-              {isPending ? 'Saving...' : 'Create task'}
+              {isPending ? 'Guardando...' : mode === 'edit' ? 'Guardar cambios' : 'Crear tarea'}
             </Button>
           </div>
         </form>

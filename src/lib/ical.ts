@@ -102,6 +102,13 @@ export async function fetchCalendarEvents(icalUrl: string): Promise<CalendarEven
   return events.sort((a, b) => a.start.getTime() - b.start.getTime())
 }
 
+export function formatEventTime(date: Date): string | null {
+  const h = date.getUTCHours()
+  const m = date.getUTCMinutes()
+  if (h === 0 && m === 0) return null
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
+
 export function upcomingEvents(events: CalendarEvent[], days = 14): CalendarEvent[] {
   const now = new Date()
   const cutoff = new Date(now.getTime() + days * 24 * 60 * 60 * 1000)

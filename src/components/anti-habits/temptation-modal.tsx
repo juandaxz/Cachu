@@ -37,9 +37,9 @@ export function TemptationModal({ antiHabit, streak }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="border-white/30 bg-white/20 text-white hover:bg-white/35 shrink-0">
+        <Button variant="outline" size="sm" className="shrink-0">
           <AlertTriangle className="h-3 w-3" />
-          <span className="hidden sm:inline">I&apos;m about to give in</span>
+          <span className="hidden sm:inline">Estoy a punto de ceder</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
@@ -51,34 +51,34 @@ export function TemptationModal({ antiHabit, streak }: Props) {
             <p className="text-base font-semibold text-foreground">{message}</p>
             {streak > 0 && (
               <p className="text-sm text-muted-foreground">
-                You&apos;ve gone <span className="text-orange-400 font-bold">{streak} days</span> without {antiHabit.name.toLowerCase()}.
-                <br />Don&apos;t throw it away.
+                Llevas <span className="text-primary font-bold">{streak} {streak === 1 ? 'día' : 'días'}</span> sin {antiHabit.name.toLowerCase()}.
+                <br />No lo desperdicies.
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">What&apos;s triggering this? (optional)</p>
+            <p className="text-sm text-muted-foreground">¿Qué lo está desencadenando? (opcional)</p>
             <Textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Write what you're feeling right now..."
+              placeholder="Escribe lo que estás sintiendo ahora mismo..."
               rows={3}
             />
           </div>
 
           {saved ? (
-            <div className="text-center text-sm text-emerald-400 font-medium py-2">
-              Saved. You can do it!
+            <div className="text-center text-sm text-primary font-medium py-2">
+              Guardado. ¡Tú puedes!
             </div>
           ) : (
             <div className="flex gap-2">
               <Button variant="ghost" className="flex-1" onClick={() => setOpen(false)}>
-                Close
+                Cerrar
               </Button>
               {note.trim() && (
                 <Button className="flex-1" onClick={handleSave} disabled={isPending}>
-                  Save note
+                  Guardar nota
                 </Button>
               )}
             </div>
